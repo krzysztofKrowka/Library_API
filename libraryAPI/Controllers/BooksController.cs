@@ -209,7 +209,7 @@ namespace libraryAPI.Controllers
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
 
         private bool BookExists(string title)
