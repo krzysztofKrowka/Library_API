@@ -112,9 +112,88 @@ namespace libraryAPI.Controllers
 
             return CreatedAtAction(nameof(GetBook), new { id = book.Id }, BookToDTO(book));
         }
+        [HttpPatch("patchCost/{title}")]
+        public async Task<IActionResult> PatchBook(string title, double cost)
+        {
+            var book = await _context.Books.Where(b => b.Title == title).SingleAsync();
+            book.Cost = cost;
+            _context.Entry(book).State = EntityState.Modified;
 
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (await _context.Books.Where(b => b.Title == title).SingleAsync() == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        
+        }
+
+        [HttpPatch("patchDescription/{title}")]
+        public async Task<IActionResult> PatchBook(string title, string description)
+        {
+            var book = await _context.Books.Where(b => b.Title == title).SingleAsync();
+            book.Description = description;
+            _context.Entry(book).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (await _context.Books.Where(b => b.Title == title).SingleAsync() == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+
+        }
+        [HttpPatch("patchCostAndDescription/{title}")]
+        public async Task<IActionResult> PatchBook(string title, double cost,string description)
+        {
+            var book = await _context.Books.Where(b => b.Title == title).SingleAsync();
+            book.Cost = cost;
+            book.Description= description;
+            _context.Entry(book).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (await _context.Books.Where(b => b.Title == title).SingleAsync() == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+
+        }
         // DELETE: api/Books/5
-        [HttpDelete("title")]
+        [HttpDelete("{title}")]
         public async Task<IActionResult> DeleteBook(string title)
         {
             if (_context.Books == null)
