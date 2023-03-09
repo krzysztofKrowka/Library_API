@@ -21,8 +21,11 @@
             set
             {
                 if (char.IsUpper(value[0]))
-                    Description = value;
-                else;
+                    if (value.Length > 100)
+                        Description = value;
+                    else
+                        throw new System.Exception("Description must be over 100 characters long");
+                else
                     throw new System.Exception("Description must start with uppercase letter");
             }
         }
@@ -32,10 +35,11 @@
 
             set
             {
-                if (char.IsUpper(value[0]))
+                var names = value.Split(' ');
+                if (char.IsUpper(names[0][0]) && char.IsUpper(names[1][0]))
                     Author = value;
-                else;
-                throw new System.Exception("Author's name must start with uppercase letter");
+                else
+                    throw new System.Exception("Author's name and surname must start with uppercase letter");
             }
         }
         public string Category { get; set; }
