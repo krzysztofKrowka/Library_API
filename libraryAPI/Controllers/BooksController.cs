@@ -16,15 +16,12 @@ namespace libraryAPI.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly IBookRepository _repository;
-
+        private IBookService _service;
+       
         [ActivatorUtilitiesConstructor]
-        public BooksController(BookContext bookContext):
-           this(new BookRepository(bookContext)) {}
-        
-        public BooksController(IBookRepository repository)
+        public BooksController(BookContext bookContext)
         {
-            _repository = repository;
+            _service = new BookService(this.ModelState, new BookRepository(bookContext));
         }
 
 
@@ -32,12 +29,12 @@ namespace libraryAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<BookDTO>> GetBooks()
         {
-          if (_repository.ListBooks() == null)
+          if (_service.ListBooks() == null)
           {
               return NotFound();
           }
 
-            return Ok(_repository.ListBooks());
+            return Ok(_service.ListBooks());
                 
         }
 
@@ -45,11 +42,11 @@ namespace libraryAPI.Controllers
         [HttpGet("{title}")]
         public async Task<ActionResult<BookDTO>> GetBook(string title)
         {
-          if (_repository.ListBook(title) == null)
+          if (_service.ListBook(title) == null)
           {
               return NotFound();
           }
-            var book = _repository.ListBook(title);
+            var book = _service.ListBook(title);
 
             if (book == null)
             {
@@ -64,7 +61,7 @@ namespace libraryAPI.Controllers
         [HttpPut("{title}")]
         public async Task<IActionResult> PutBook(string title, BookDTO bookDTO)
         {
-            var put = _repository.PutBook(title, bookDTO);
+            var put = _service.PutBook(title, bookDTO);
             if (put)
                 return NoContent();
             else
@@ -76,16 +73,16 @@ namespace libraryAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(BookDTO bookDTO)
         {
-            Book book = _repository.CreateBook(bookDTO);
+            Book book = _service.CreateBook(bookDTO);
             if(book==null)
                 return BadRequest();
             else
-                return CreatedAtAction(nameof(GetBook), new { id = book.Id }, _repository.BookToDTO(book));
+                return CreatedAtAction(nameof(GetBook), new { id = book.Id }, _service.BookToDTO(book));
         }
         [HttpPatch("patchCost/{title}")]
         public async Task<IActionResult> PatchBook(string title, double cost)
         {
-            var put = _repository.PatchCost(title, cost);
+            var put = _service.PatchCost(title, cost);
             if (put)
                 return NoContent();
             else
@@ -95,7 +92,7 @@ namespace libraryAPI.Controllers
         [HttpPatch("patchDescription/{title}")]
         public async Task<IActionResult> PatchBook(string title, string description)
         {
-            var put = _repository.PatchDescription(title, description);
+            var put = _service.PatchDescription(title, description);
             if (put)
                 return NoContent();
             else
@@ -104,7 +101,7 @@ namespace libraryAPI.Controllers
         [HttpPatch("patchCostAndDescription/{title}")]
         public async Task<IActionResult> PatchBook(string title, double cost,string description)
         {
-            var put = _repository.PatchCostAndDescription(title,description, cost);
+            var put = _service.PatchCostAndDescription(title,description, cost);
             if (put)
                 return NoContent();
             else
@@ -115,7 +112,7 @@ namespace libraryAPI.Controllers
         [HttpDelete("{title}")]
         public async Task<IActionResult> DeleteBook(string title)
         {
-            var delete = _repository.DeleteBook(title);
+            var delete = _service.DeleteBook(title);
             if(delete)
                 return NoContent();
             else
