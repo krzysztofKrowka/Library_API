@@ -14,11 +14,7 @@ namespace Library.Repositories.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        
-        //public static DbContextOptions<BookContext> options = new DbContextOptions<BookContext>();
-        
-        private static DbContextOptionsBuilder<BookContext> db = new DbContextOptionsBuilder<BookContext>();
-        private  BookContext _context= new BookContext(db.Options);
+        private BookContext _context;
        public BookRepository(BookContext bookContext) 
        {
             _context = bookContext;
@@ -176,7 +172,7 @@ namespace Library.Repositories.Repositories
             _context.SaveChanges();
             return true;
         }
-         public BookDTO BookToDTO(Book book)
+        public static BookDTO BookToDTO(Book book)
         {
             return new BookDTO
             {
@@ -188,6 +184,9 @@ namespace Library.Repositories.Repositories
                 Cost = book.Cost
             };
         }
+        public bool BookExists(string title) {
+            return (_context.Books?.Any(e => e.Title == title)).GetValueOrDefault();
+        }
     }
 
     public interface IBookRepository
@@ -197,10 +196,11 @@ namespace Library.Repositories.Repositories
         public bool PatchCost(string title, double cost);
         public bool PutBook(string title, BookDTO bookDTO);
         public bool DeleteBook(string title);
-        public BookDTO BookToDTO(Book book);
+        //public BookDTO BookToDTO(Book book);
         public BookDTO ListBook(string title);
         Book CreateBook(BookDTO bookToCreate);
         IEnumerable<BookDTO> ListBooks();
+        public bool BookExists(string title);
     }
     
 }

@@ -22,16 +22,19 @@ namespace Library.Services
 
         protected bool ValidateBook(BookDTO bookToValidate)
         {
-            if(bookToValidate == null) return false;
-            if (bookToValidate.PublicationDate < 200 || bookToValidate.PublicationDate < DateTime.Now.Year)
+            if(bookToValidate == null) 
+                return false;
+            if (_repository.BookExists(bookToValidate.Title))
+                _modelState.AddModelError("Book", "Book with that title is already added");
+            if (bookToValidate.PublicationDate < 200 || bookToValidate.PublicationDate > 2024)
                 _modelState.AddModelError("Publication Date", "Publication date is not correct");
             if (bookToValidate.Title.Trim().Length == 0)
                 _modelState.AddModelError("Title", "Title is required.");
-            if (char.IsUpper(bookToValidate.Title.Trim()[0]))
+            if (!char.IsUpper(bookToValidate.Title.Trim()[0]))
                 _modelState.AddModelError("Title", "Title's first letter must be upper.");
             if (bookToValidate.Author.Trim().Length == 0)
                 _modelState.AddModelError("Author", "Author is required.");
-            if (char.IsUpper(bookToValidate.Author.Trim()[0]))
+            if (!char.IsUpper(bookToValidate.Author.Trim()[0]))
                 _modelState.AddModelError("Author", "Author's name must be upper.");
             if (bookToValidate.Description.Trim().Length <= 50)
                 _modelState.AddModelError("Description", "Description must be over 50 characters long.");
@@ -91,7 +94,7 @@ namespace Library.Services
         }
         public Book CreateBook(BookDTO bookToCreate)
         {
-            Book book;
+            Book book=new Book();
             // Validation logic
             if (!ValidateBook(bookToCreate))
                 return null;
@@ -102,24 +105,13 @@ namespace Library.Services
                  book = _repository.CreateBook(bookToCreate);
             }
             catch
-            {
+            { 
                 return null;
             }
             return book;
+           
         }
-        public BookDTO BookToDTO(Book book)
-        {
-            return new BookDTO
-            {
-                Title = book.Title,
-                Description = book.Description,
-                Author = book.Author,
-                Category = book.Category,
-                PublicationDate = book.PublicationDate,
-                Cost = book.Cost
-            };
-        }
-    
+ 
     }
 
     public interface IBookService
@@ -132,6 +124,5 @@ namespace Library.Services
         BookDTO ListBook(string title);
         Book CreateBook(BookDTO productToCreate);
         IEnumerable<BookDTO> ListBooks();
-        BookDTO BookToDTO(Book book);
     }
 }

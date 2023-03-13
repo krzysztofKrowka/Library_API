@@ -75,9 +75,9 @@ namespace libraryAPI.Controllers
         {
             Book book = _service.CreateBook(bookDTO);
             if(book==null)
-                return BadRequest();
+                return BadRequest("Error");
             else
-                return CreatedAtAction(nameof(GetBook), new { id = book.Id }, _service.BookToDTO(book));
+                return CreatedAtAction(nameof(GetBook), new { id = book.Id }, BookRepository.BookToDTO(book));
         }
         [HttpPatch("patchCost/{title}")]
         public async Task<IActionResult> PatchBook(string title, double cost)
