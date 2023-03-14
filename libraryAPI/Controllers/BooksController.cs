@@ -1,30 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Library.Services;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc;
 using Library.Repositories.Repositories;
 using Library.Repositories.Models;
+using Library.Services.Models;
+using Library.Services.Interfaces;
 namespace libraryAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private IBookService _service;
-       
+        private readonly IBookService _service;
+               
         [ActivatorUtilitiesConstructor]
         public BooksController(BookContext bookContext)
         {
             _service = new BookService(this.ModelState, new BookRepository(bookContext));
         }
 
+        [HttpGet("give")]
+        public ActionResult<IEnumerable<BookAuthors>> GetAuthorBooks()
+        {
+            return Ok(_service.BookAuthors());
 
+        }
         // GET: api/Books
         [HttpGet]
         public ActionResult<IEnumerable<BookDTO>> GetBooks()
@@ -38,6 +36,16 @@ namespace libraryAPI.Controllers
                 
         }
 
+        [HttpGet("ByAuthor/{id}")]
+        public ActionResult<IEnumerable<BookDTO>> GetBooksByAuthor(int id)
+        {
+            if (_service.ListBooks() == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_service.ListBooksByAuthor(id));
+        }
         // GET: api/Books/5
         [HttpGet("{title}")]
         public async Task<ActionResult<BookDTO>> GetBook(string title)
@@ -77,7 +85,7 @@ namespace libraryAPI.Controllers
             if(book==null)
                 return BadRequest("Error");
             else
-                return CreatedAtAction(nameof(GetBook), new { id = book.Id }, BookRepository.BookToDTO(book));
+                return CreatedAtAction(nameof(GetBook), new { id = book.Id }, BookService.BookToDTO(book));
         }
         [HttpPatch("patchCost/{title}")]
         public async Task<IActionResult> PatchBook(string title, double cost)

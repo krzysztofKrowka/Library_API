@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Library.Repositories.Models;
-using Library.Repositories.Repositories;
+﻿using Library.Repositories.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Library.Repositories.Interfaces;
+using Library.Services.Interfaces;
+using Microsoft.CodeAnalysis;
+
 //using System.Web.Mvc;
-namespace Library.Services
+namespace Library.Services.Models
 {
     public class BookService : IBookService
     {
+        
         private ModelStateDictionary _modelState;
         private IBookRepository _repository;
 
@@ -22,7 +21,7 @@ namespace Library.Services
 
         protected bool ValidateBook(BookDTO bookToValidate)
         {
-            if(bookToValidate == null) 
+            if (bookToValidate == null)
                 return false;
             if (_repository.BookExists(bookToValidate.Title))
                 _modelState.AddModelError("Book", "Book with that title is already added");
@@ -32,11 +31,7 @@ namespace Library.Services
                 _modelState.AddModelError("Title", "Title is required.");
             if (!char.IsUpper(bookToValidate.Title.Trim()[0]))
                 _modelState.AddModelError("Title", "Title's first letter must be upper.");
-            if (bookToValidate.Author.Trim().Length == 0)
-                _modelState.AddModelError("Author", "Author is required.");
-            if (!char.IsUpper(bookToValidate.Author.Trim()[0]))
-                _modelState.AddModelError("Author", "Author's name must be upper.");
-            if (bookToValidate.Description.Trim().Length <= 50)
+            if (bookToValidate.Description.Length <= 50)
                 _modelState.AddModelError("Description", "Description must be over 50 characters long.");
             if (bookToValidate.Cost < 0)
                 _modelState.AddModelError("Cost", "Cost cannot be less than zero.");
@@ -60,23 +55,32 @@ namespace Library.Services
         }
         public bool PutBook(string title, BookDTO bookDTO)
         {
-            if(!ValidateBook(bookDTO))
+            var book = new Book
+            {
+                Author_ID =bookDTO.Author_ID,
+                Title = bookDTO.Title,
+                Cost = bookDTO.Cost,
+                Category = bookDTO.Category,
+                PublicationDate = bookDTO.PublicationDate,
+                Description = bookDTO.Description,
+            };
+            if (!ValidateBook(bookDTO))
                 return false;
-            return _repository.PutBook(title, bookDTO);
+            return _repository.PutBook(title, book);
         }
         public bool PatchCost(string title, double cost)
         {
-            if(!ValidateCost(cost))
+            if (!ValidateCost(cost))
                 return false;
             return _repository.PatchCost(title, cost);
         }
         public bool PatchDescription(string title, string description)
         {
-            if(!ValidateDescription(description))
+            if (!ValidateDescription(description))
                 return false;
             return _repository.PatchDescription(title, description);
         }
-        public bool PatchCostAndDescription(string title, string description,double cost)
+        public bool PatchCostAndDescription(string title, string description, double cost)
         {
             if (!ValidateCost(cost))
                 return false;
@@ -86,43 +90,67 @@ namespace Library.Services
         }
         public IEnumerable<BookDTO> ListBooks()
         {
-            return _repository.ListBooks();
+            return BooksToDTO(_repository.ListBooks());
         }
         public BookDTO ListBook(string title)
         {
-            return _repository.ListBook(title);
+            return BookToDTO(_repository.ListBook(title));
         }
-        public Book CreateBook(BookDTO bookToCreate)
+        public Book CreateBook(BookDTO bookDTO)
         {
-            Book book=new Book();
+            var book = new Book
+            {
+                Author_ID = bookDTO.Author_ID,
+                Title = bookDTO.Title,
+                Cost = bookDTO.Cost,
+                Category = bookDTO.Category,
+                PublicationDate = bookDTO.PublicationDate,
+                Description = bookDTO.Description,
+            };
             // Validation logic
-            if (!ValidateBook(bookToCreate))
-                return null;
+          //  if (!ValidateBook(bookDTO))
+            //    return null;
 
             // Database logic
             try
             {
-                 book = _repository.CreateBook(bookToCreate);
+                book = _repository.CreateBook(book);
             }
             catch
-            { 
+            {
                 return null;
             }
             return book;
-           
-        }
- 
-    }
 
-    public interface IBookService
-    {
-        bool PatchCostAndDescription(string title, string description, double cost);
-        bool PatchDescription(string title, string description);
-        bool PatchCost(string title, double cost);
-        bool PutBook(string title, BookDTO bookDTO);
-        bool DeleteBook(string title);
-        BookDTO ListBook(string title);
-        Book CreateBook(BookDTO productToCreate);
-        IEnumerable<BookDTO> ListBooks();
+        }
+        public static BookDTO BookToDTO(Book book)
+        {
+            return new BookDTO
+            {
+                Title = book.Title,
+                Description = book.Description,
+                Author_ID = book.Author_ID,
+                Category = book.Category,
+                PublicationDate = book.PublicationDate,
+                Cost = book.Cost
+            };
+        }
+        public static IEnumerable<BookDTO> BooksToDTO(IEnumerable<Book> books)
+        {
+            List<BookDTO> result = new List<BookDTO>();
+            foreach (var book in books)
+                result.Add(BookToDTO(book));
+            return result;
+        }
+
+        public IEnumerable<Book> ListBooksByAuthor(int authorID)
+        {
+            return _repository.ListBooksByAuthor(authorID);
+        }
+    
+        public IEnumerable<BookAuthors> BookAuthors()
+        {
+            return _repository.ListBookAuthors();
+        }
     }
 }

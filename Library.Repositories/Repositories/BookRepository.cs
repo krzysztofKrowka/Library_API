@@ -1,15 +1,7 @@
 ﻿using Library.Repositories.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.Reflection;
-using Microsoft.Extensions.Options;
-
+using Library.Repositories.Interfaces;
+using Library.Repositories.Interfaces;
 namespace Library.Repositories.Repositories
 {
     public class BookRepository : IBookRepository
@@ -19,30 +11,39 @@ namespace Library.Repositories.Repositories
        {
             _context = bookContext;
        }
-
-
-
-        public IEnumerable<BookDTO> ListBooks()
+        
+        public IEnumerable<BookAuthors> ListBookAuthors()
         {
-            return _context.Books.Select(x => BookToDTO(x)).ToList();
+            return _context.BookAuthors.Select(x => x).ToList();
         }
-        public BookDTO ListBook(string title)
-        {
-            return BookToDTO(_context.Books.Where(b => b.Title == title).Single());
+        public IEnumerable<Book> ListBooksByAuthor(int authorID) { 
+            List<Book> books = new List<Book>();
+            List<BookAuthors> booksByAuthor = _context.BookAuthors.Where(b => b.Author_ID == authorID).ToList();
+            foreach(var book in booksByAuthor) { 
+                int id = book.Book_ID;
+                var correctBook = _context.Books.Where(b => b.Id == id).Single();
+                books.Add(correctBook);
+            }
+            return books;
         }
-        public Book CreateBook(BookDTO bookDTO)
+        public IEnumerable<Book> ListBooks()
         {
-            var book = new Book
-            {
-                Author = bookDTO.Author,
-                Title = bookDTO.Title,
-                Cost = bookDTO.Cost,
-                Category = bookDTO.Category,
-                PublicationDate = bookDTO.PublicationDate,
-                Description = bookDTO.Description,
-            };
+            return _context.Books.Select(x => x).ToList();
+        }
+        public Book ListBook(string title)
+        {
+            return _context.Books.Where(b => b.Title == title).Single();
+        }
+        public Book CreateBook(Book book)
+        {
+            
             try
             {
+                book.Id = (_context.Books.Count()) + 1;
+                BookAuthors author = new BookAuthors();
+                author.Book_ID = book.Id;
+                author.Author_ID = book.Author_ID;
+                _context.BookAuthors.Add(author);
                 _context.Books.Add(book);
                 _context.SaveChanges();
                 return book;
@@ -52,7 +53,7 @@ namespace Library.Repositories.Repositories
                 return null;
             }
         }
-        public bool PutBook(string title,BookDTO bookDTO)
+        public bool PutBook(string title,Book bookDTO)
         {
             if (title != bookDTO.Title)
             {
@@ -60,7 +61,7 @@ namespace Library.Repositories.Repositories
             }
             var book = _context.Books.Where(b => b.Title == title).Single();
             book.Description = bookDTO.Description;
-            book.Author = bookDTO.Author;
+            book.Author_ID = bookDTO.Author_ID;
             book.Category = bookDTO.Category;
             book.PublicationDate = bookDTO.PublicationDate;
             book.Cost = bookDTO.Cost;
@@ -163,44 +164,20 @@ namespace Library.Repositories.Repositories
             {
                 return false;
             }
-            var book = _context.Books.Where(b => b.Title == title).Single();
+            var book = _context.Books.Where(b => b.Title == title).First();
             if (book == null)
             {
                 return false;
             }
+            var bookAuthor = _context.BookAuthors.Where(b => b.Book_ID == book.Id).First();
             _context.Books.Remove(book);
+            _context.BookAuthors.Remove(bookAuthor);
             _context.SaveChanges();
             return true;
-        }
-        public static BookDTO BookToDTO(Book book)
-        {
-            return new BookDTO
-            {
-                Title = book.Title,
-                Description = book.Description,
-                Author = book.Author,
-                Category = book.Category,
-                PublicationDate = book.PublicationDate,
-                Cost = book.Cost
-            };
         }
         public bool BookExists(string title) {
             return (_context.Books?.Any(e => e.Title == title)).GetValueOrDefault();
         }
-    }
 
-    public interface IBookRepository
-    {
-        public bool PatchCostAndDescription(string title, string description,double cost);
-        public bool PatchDescription(string title,string description);
-        public bool PatchCost(string title, double cost);
-        public bool PutBook(string title, BookDTO bookDTO);
-        public bool DeleteBook(string title);
-        //public BookDTO BookToDTO(Book book);
-        public BookDTO ListBook(string title);
-        Book CreateBook(BookDTO bookToCreate);
-        IEnumerable<BookDTO> ListBooks();
-        public bool BookExists(string title);
     }
-    
 }

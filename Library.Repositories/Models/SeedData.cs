@@ -20,17 +20,7 @@ public static class SeedData
                 return;   // DB has been seeded
             }
             context.Books.AddRange(
-                new Book
-                {
-                    Id=0,
-                    Title = "When Harry Met Sally",
-                    Author= "John Wick",
-                    Description= "ABCDEFGHIJKLMNOPRSTUWXYZABCDEFGHIJKLMNOPRSTUWXYZ",
-                    Cost= 123,
-                    PublicationDate=1234,
-                    Category="Fantasy",
-                    Quantity=0
-                }
+               
             );
             context.SaveChanges();
         }
