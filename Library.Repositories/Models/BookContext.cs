@@ -22,10 +22,9 @@ namespace Library.Repositories.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if(!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=Inventory;Trusted_Connection=True;");
-            }
+            optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=library;Trusted_Connection=True;TrustServerCertificate=True;",b => b.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null));
+            base.OnConfiguring(optionsBuilder);
+            
         }
 
 

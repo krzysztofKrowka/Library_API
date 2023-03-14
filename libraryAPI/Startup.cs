@@ -13,7 +13,7 @@ namespace libraryAPI
             services.AddMvc();
 
             services.AddScoped<IBookRepository, BookRepository>();
-            services.AddDbContextPool<BookContext>(options => options.UseSqlServer("Server=127.0.0.1;Database=Library;Trusted_Connection=True;"));
+            services.AddDbContextPool<BookContext>(options => options.UseSqlServer("Server=127.0.0.1;Database=Library;Trusted_Connection=True;TrustServerCertificate=True;"));
             services.AddControllers();
         }
         public void Configure(IApplicationBuilder app)
