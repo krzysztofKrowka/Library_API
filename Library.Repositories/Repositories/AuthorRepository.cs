@@ -1,5 +1,6 @@
 ﻿using Library.Repositories.Interfaces;
 using Library.Repositories.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace Library.Repositories.Repositories
 {
     public class AuthorRepository : IAuthorRepository
     {
-        private BookContext _context;
+        private readonly BookContext _context;
         public AuthorRepository(BookContext bookContext)
         {
             _context = bookContext;
         }
-        public bool AuthorExists(int id)
+        public bool AuthorExists(Guid id)
         {
             return (_context.Authors?.Any(e => e.AuthorID == id)).GetValueOrDefault();
         }
@@ -35,7 +36,7 @@ namespace Library.Repositories.Repositories
             }
         }
 
-        public bool DeleteAuthor(int id)
+        public bool DeleteAuthor(Guid id)
         {
             if (_context.Authors == null)
             {
@@ -46,20 +47,34 @@ namespace Library.Repositories.Repositories
             {
                 return false;
             }
+            List<Book> books = _context.Books.Where(b => b.AuthorFirstName == author.FirstName && b.AuthorLastName == author.LastName).ToList();
+            List<BookAuthors> bookAuthors = _context.BookAuthors.Where(b => b.Author_ID == id).ToList();
+            if (books != null)
+            {
+                foreach (var book in books)
+                {
+                    _context.Books.Remove(book);
+                }
+                foreach(var book in bookAuthors)
+                {
+                    _context.BookAuthors.Remove(book);
+                }
+            }
             _context.Authors.Remove(author);
             _context.SaveChanges();
             return true;
         }
 
-        public Author ListAuthor(int id)
+        public Author ListAuthor(Guid id)
         {
             return _context.Authors.Where(b => b.AuthorID == id).Single();
         }
 
         public Author ListAuthorOfBook(string title)
         {
-            int id = _context.Books.Where(b =>b.Title==title).Single().Author_ID;
-            Author author = _context.Authors.Where(a => a.AuthorID ==id).Single();
+            string firstName = _context.Books.Where(b =>b.Title==title).Single().AuthorFirstName;
+            string lastName = _context.Books.Where(b => b.Title == title).Single().AuthorLastName;
+            Author author = _context.Authors.Where(a => a.FirstName ==firstName && a.LastName == lastName).Single();
             return author;
         }
         public IEnumerable<Author> ListAuthors()
@@ -67,7 +82,7 @@ namespace Library.Repositories.Repositories
             return _context.Authors.Select(x => x).ToList();
         }
 
-        public bool PutAuthor(int id, Author author)
+        public bool PutAuthor(Guid id, Author author)
         {
             if (id != author.AuthorID)
             {

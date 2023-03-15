@@ -1,27 +1,23 @@
 ﻿using Library.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 using Library.Repositories.Interfaces;
-using Library.Repositories.Interfaces;
 namespace Library.Repositories.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        private BookContext _context;
+        private readonly BookContext _context;
        public BookRepository(BookContext bookContext) 
        {
             _context = bookContext;
        }
         
-        public IEnumerable<BookAuthors> ListBookAuthors()
-        {
-            return _context.BookAuthors.Select(x => x).ToList();
-        }
-        public IEnumerable<Book> ListBooksByAuthor(int authorID) { 
+        public IEnumerable<Book> ListBooksByAuthor(string FirstName, string LastName) { 
             List<Book> books = new List<Book>();
+            Guid authorID = _context.Authors.Where(x => x.FirstName == FirstName && x.LastName == LastName).FirstOrDefault().AuthorID;
             List<BookAuthors> booksByAuthor = _context.BookAuthors.Where(b => b.Author_ID == authorID).ToList();
             foreach(var book in booksByAuthor) { 
-                int id = book.Book_ID;
-                var correctBook = _context.Books.Where(b => b.Id == id).Single();
+                Guid id = book.Book_ID;
+                var correctBook = _context.Books.Where(b => b.BookID == id).Single();
                 books.Add(correctBook);
             }
             return books;
@@ -36,13 +32,12 @@ namespace Library.Repositories.Repositories
         }
         public Book CreateBook(Book book)
         {
-            
             try
             {
-                book.Id = (_context.Books.Count()) + 1;
                 BookAuthors author = new BookAuthors();
-                author.Book_ID = book.Id;
-                author.Author_ID = book.Author_ID;
+                author.ID = Guid.NewGuid();
+                author.Book_ID =book.BookID;
+                author.Author_ID = _context.Authors.Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName).Single().AuthorID;  
                 _context.BookAuthors.Add(author);
                 _context.Books.Add(book);
                 _context.SaveChanges();
@@ -61,7 +56,8 @@ namespace Library.Repositories.Repositories
             }
             var book = _context.Books.Where(b => b.Title == title).Single();
             book.Description = bookDTO.Description;
-            book.Author_ID = bookDTO.Author_ID;
+            book.AuthorFirstName = bookDTO.AuthorFirstName;
+            book.AuthorLastName = bookDTO.AuthorLastName;
             book.Category = bookDTO.Category;
             book.PublicationDate = bookDTO.PublicationDate;
             book.Cost = bookDTO.Cost;
@@ -169,7 +165,7 @@ namespace Library.Repositories.Repositories
             {
                 return false;
             }
-            var bookAuthor = _context.BookAuthors.Where(b => b.Book_ID == book.Id).First();
+            var bookAuthor = _context.BookAuthors.Where(b =>b.Book_ID == book.BookID).First();
             _context.Books.Remove(book);
             _context.BookAuthors.Remove(bookAuthor);
             _context.SaveChanges();

@@ -17,12 +17,6 @@ namespace libraryAPI.Controllers
             _service = new BookService(this.ModelState, new BookRepository(bookContext));
         }
 
-        [HttpGet("give")]
-        public ActionResult<IEnumerable<BookAuthors>> GetAuthorBooks()
-        {
-            return Ok(_service.BookAuthors());
-
-        }
         // GET: api/Books
         [HttpGet]
         public ActionResult<IEnumerable<BookDTO>> GetBooks()
@@ -36,15 +30,15 @@ namespace libraryAPI.Controllers
                 
         }
 
-        [HttpGet("ByAuthor/{id}")]
-        public ActionResult<IEnumerable<BookDTO>> GetBooksByAuthor(int id)
+        [HttpGet("ByAuthor/")]
+        public ActionResult<IEnumerable<BookDTO>> GetBooksByAuthor(string FirstName, string LastName)
         {
             if (_service.ListBooks() == null)
             {
                 return NotFound();
             }
 
-            return Ok(_service.ListBooksByAuthor(id));
+            return Ok(_service.ListBooksByAuthor(FirstName, LastName));
         }
         // GET: api/Books/5
         [HttpGet("{title}")]
@@ -85,7 +79,7 @@ namespace libraryAPI.Controllers
             if(book==null)
                 return BadRequest("Error");
             else
-                return CreatedAtAction(nameof(GetBook), new { id = book.Id }, BookService.BookToDTO(book));
+                return CreatedAtAction(nameof(GetBook), new { id = book.BookID }, BookService.BookToDTO(book));
         }
         [HttpPatch("patchCost/{title}")]
         public async Task<IActionResult> PatchBook(string title, double cost)

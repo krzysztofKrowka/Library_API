@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Library.Services.Models;
 namespace Library.Services.Interfaces
 {
     public interface IAuthorService
     {
-        public bool PutAuthor(int id, Author author);
-        public bool DeleteAuthor(int id);
-        public Author ListAuthor(int id);
-        Author CreateAuthor(Author authorToCreate);
+        public bool PutAuthor(Guid id, AuthorDTO author);
+        public bool DeleteAuthor(Guid id);
+        public Author ListAuthor(Guid id);
+        Author CreateAuthor(AuthorDTO authorToCreate);
         IEnumerable<Author> ListAuthors();
-        public bool AuthorExists(int id);
+        public bool AuthorExists(Guid id);
         public Author ListAuthorOfBook(string title);
 
     }

@@ -9,9 +9,9 @@ namespace Library.Services.Models
 {
     public class BookService : IBookService
     {
-        
+
         private ModelStateDictionary _modelState;
-        private IBookRepository _repository;
+        private readonly IBookRepository _repository;
 
         public BookService(ModelStateDictionary modelState, IBookRepository repository)
         {
@@ -57,7 +57,8 @@ namespace Library.Services.Models
         {
             var book = new Book
             {
-                Author_ID =bookDTO.Author_ID,
+                AuthorFirstName = bookDTO.AuthorFirstName,
+                AuthorLastName = bookDTO.AuthorLastName,
                 Title = bookDTO.Title,
                 Cost = bookDTO.Cost,
                 Category = bookDTO.Category,
@@ -100,7 +101,9 @@ namespace Library.Services.Models
         {
             var book = new Book
             {
-                Author_ID = bookDTO.Author_ID,
+                BookID = Guid.NewGuid(),
+                AuthorFirstName = bookDTO.AuthorFirstName,
+                AuthorLastName = bookDTO.AuthorLastName,
                 Title = bookDTO.Title,
                 Cost = bookDTO.Cost,
                 Category = bookDTO.Category,
@@ -108,7 +111,7 @@ namespace Library.Services.Models
                 Description = bookDTO.Description,
             };
             // Validation logic
-          //  if (!ValidateBook(bookDTO))
+            //  if (!ValidateBook(bookDTO))
             //    return null;
 
             // Database logic
@@ -129,7 +132,8 @@ namespace Library.Services.Models
             {
                 Title = book.Title,
                 Description = book.Description,
-                Author_ID = book.Author_ID,
+                AuthorFirstName = book.AuthorFirstName,
+                AuthorLastName = book.AuthorLastName,
                 Category = book.Category,
                 PublicationDate = book.PublicationDate,
                 Cost = book.Cost
@@ -143,14 +147,9 @@ namespace Library.Services.Models
             return result;
         }
 
-        public IEnumerable<Book> ListBooksByAuthor(int authorID)
+        public IEnumerable<Book> ListBooksByAuthor(string FirstName, string LastName)
         {
-            return _repository.ListBooksByAuthor(authorID);
-        }
-    
-        public IEnumerable<BookAuthors> BookAuthors()
-        {
-            return _repository.ListBookAuthors();
+            return _repository.ListBooksByAuthor(FirstName, LastName);
         }
     }
 }

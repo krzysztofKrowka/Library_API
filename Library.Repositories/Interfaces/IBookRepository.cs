@@ -13,8 +13,7 @@ namespace Library.Repositories.Interfaces
         public Book ListBook(string title);
         Book CreateBook(Book bookToCreate);
         IEnumerable<Book> ListBooks();
-        IEnumerable<Book> ListBooksByAuthor(int authorID);
-        public IEnumerable<BookAuthors> ListBookAuthors();
+        IEnumerable<Book> ListBooksByAuthor(string FirstName,string LastName);
         public bool BookExists(string title);
     }
 }

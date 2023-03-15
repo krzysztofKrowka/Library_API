@@ -9,8 +9,8 @@ namespace Library.Repositories.Models
 {
     public class BookAuthors
     {
-        public int ID { get; set; }
-        public int Author_ID { get; set; }
-        public int Book_ID { get; set; }
+        public Guid ID { get; set; }// = Guid.NewGuid();
+        public Guid Author_ID { get; set; }
+        public Guid Book_ID { get; set; }
     }
 }

@@ -43,7 +43,7 @@ namespace libraryAPI.Controllers
 
         // GET: api/Books/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Author>> GetAuthor(int id)
+        public async Task<ActionResult<Author>> GetAuthor(Guid id)
         {
             if (_service.ListAuthor(id) == null)
             {
@@ -62,7 +62,7 @@ namespace libraryAPI.Controllers
         // PUT: api/Books/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAuthor(int id, Author author)
+        public async Task<IActionResult> PutAuthor(Guid id, AuthorDTO author)
         {
             var put = _service.PutAuthor(id, author);
             if (put)
@@ -74,18 +74,18 @@ namespace libraryAPI.Controllers
         // POST: api/Books
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Book>> PostAuthor(Author author)
+        public async Task<ActionResult<Book>> PostAuthor(AuthorDTO author)
         {
             Author authorToCreate = _service.CreateAuthor(author);
             if (authorToCreate == null)
                 return BadRequest("Error");
             else
-                return CreatedAtAction(nameof(GetAuthor), new { id = author.AuthorID }, author);
+                return CreatedAtAction(nameof(GetAuthor), new { id = authorToCreate.AuthorID }, author);
         }
         
         // DELETE: api/Authors/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuthor(int id)
+        public async Task<IActionResult> DeleteAuthor(Guid id)
         {
             var delete = _service.DeleteAuthor(id);
             if (delete)
