@@ -6,9 +6,9 @@ namespace Library.Services.Interfaces
     public interface IBookService
     {
         IEnumerable<Book> ListBooksByAuthor(string FirstName, string LastName);
-        bool PatchCostAndDescription(string title, string description, double cost);
+        bool PatchBorrowedAndDescription(string title, string description, bool isBorrowed);
         bool PatchDescription(string title, string description);
-        bool PatchCost(string title, double cost);
+        bool PatchBorrowed(string title, bool isBorrowed);
         bool PutBook(string title, BookDTO bookDTO);
         bool DeleteBook(string title);
         BookDTO ListBook(string title);

@@ -4,9 +4,9 @@ namespace Library.Repositories.Interfaces
 {
     public interface IBookRepository
     {
-        public bool PatchCostAndDescription(string title, string description, double cost);
+        public bool PatchBorrowedAndDescription(string title, string description, bool IsBorrowed);
         public bool PatchDescription(string title, string description);
-        public bool PatchCost(string title, double cost);
+        public bool PatchBorrowed(string title, bool IsBorrowed);
         public bool PutBook(string title, Book bookDTO);
         public bool DeleteBook(string title);
         //public BookDTO BookToDTO(Book book);

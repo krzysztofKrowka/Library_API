@@ -9,7 +9,7 @@
         public string AuthorLastName { get; set; }
         public string Category { get; set; }
         public int PublicationDate { get; set; }
-        public double Cost { get; set; }
+        public bool IsBorrowed { get; set; }
 
 
 

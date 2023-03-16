@@ -33,14 +33,6 @@ namespace Library.Services.Models
                 _modelState.AddModelError("Title", "Title's first letter must be upper.");
             if (bookToValidate.Description.Length <= 50)
                 _modelState.AddModelError("Description", "Description must be over 50 characters long.");
-            if (bookToValidate.Cost < 0)
-                _modelState.AddModelError("Cost", "Cost cannot be less than zero.");
-            return _modelState.IsValid;
-        }
-        protected bool ValidateCost(double cost)
-        {
-            if (cost < 0)
-                _modelState.AddModelError("Cost", "Cost cannot be less than zero.");
             return _modelState.IsValid;
         }
         protected bool ValidateDescription(string description)
@@ -60,7 +52,7 @@ namespace Library.Services.Models
                 AuthorFirstName = bookDTO.AuthorFirstName,
                 AuthorLastName = bookDTO.AuthorLastName,
                 Title = bookDTO.Title,
-                Cost = bookDTO.Cost,
+                IsBorrowed = bookDTO.IsBorrowed,
                 Category = bookDTO.Category,
                 PublicationDate = bookDTO.PublicationDate,
                 Description = bookDTO.Description,
@@ -69,11 +61,10 @@ namespace Library.Services.Models
                 return false;
             return _repository.PutBook(title, book);
         }
-        public bool PatchCost(string title, double cost)
+        public bool PatchBorrowed(string title,bool isBorrowed)
         {
-            if (!ValidateCost(cost))
-                return false;
-            return _repository.PatchCost(title, cost);
+
+            return _repository.PatchBorrowed(title, isBorrowed);
         }
         public bool PatchDescription(string title, string description)
         {
@@ -81,13 +72,11 @@ namespace Library.Services.Models
                 return false;
             return _repository.PatchDescription(title, description);
         }
-        public bool PatchCostAndDescription(string title, string description, double cost)
+        public bool PatchBorrowedAndDescription(string title, string description, bool isBorrowed)
         {
-            if (!ValidateCost(cost))
-                return false;
             if (!ValidateDescription(description))
                 return false;
-            return _repository.PatchCostAndDescription(title, description, cost);
+            return _repository.PatchBorrowedAndDescription(title, description, isBorrowed);
         }
         public IEnumerable<BookDTO> ListBooks()
         {
@@ -105,7 +94,7 @@ namespace Library.Services.Models
                 AuthorFirstName = bookDTO.AuthorFirstName,
                 AuthorLastName = bookDTO.AuthorLastName,
                 Title = bookDTO.Title,
-                Cost = bookDTO.Cost,
+                IsBorrowed = bookDTO.IsBorrowed,
                 Category = bookDTO.Category,
                 PublicationDate = bookDTO.PublicationDate,
                 Description = bookDTO.Description,
@@ -136,7 +125,7 @@ namespace Library.Services.Models
                 AuthorLastName = book.AuthorLastName,
                 Category = book.Category,
                 PublicationDate = book.PublicationDate,
-                Cost = book.Cost
+                IsBorrowed = book.IsBorrowed
             };
         }
         public static IEnumerable<BookDTO> BooksToDTO(IEnumerable<Book> books)

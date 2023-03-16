@@ -60,7 +60,7 @@ namespace Library.Repositories.Repositories
             book.AuthorLastName = bookDTO.AuthorLastName;
             book.Category = bookDTO.Category;
             book.PublicationDate = bookDTO.PublicationDate;
-            book.Cost = bookDTO.Cost;
+            book.IsBorrowed = bookDTO.IsBorrowed;
             _context.Entry(book).State = EntityState.Modified;
 
             try
@@ -81,10 +81,10 @@ namespace Library.Repositories.Repositories
 
             return true;
         }
-        public bool PatchCost(string title,double cost)
+        public bool PatchBorrowed(string title,bool isBorrwed)
         {
             var book = _context.Books.Where(b => b.Title == title).Single();
-            book.Cost = cost;
+            book.IsBorrowed = isBorrwed;
             _context.Entry(book).State = EntityState.Modified;
 
             try
@@ -129,11 +129,11 @@ namespace Library.Repositories.Repositories
 
             return true;
         }
-        public bool PatchCostAndDescription(string title,string description, double cost)
+        public bool PatchBorrowedAndDescription(string title,string description, bool isBorrowed)
         {
             var book = _context.Books.Where(b => b.Title == title).Single();
             book.Description = description;
-            book.Cost = cost;
+            book.IsBorrowed = isBorrowed;
             _context.Entry(book).State = EntityState.Modified;
 
             try

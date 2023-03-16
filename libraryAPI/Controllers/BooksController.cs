@@ -81,10 +81,10 @@ namespace libraryAPI.Controllers
             else
                 return CreatedAtAction(nameof(GetBook), new { id = book.BookID }, BookService.BookToDTO(book));
         }
-        [HttpPatch("patchCost/{title}")]
-        public async Task<IActionResult> PatchBook(string title, double cost)
+        [HttpPatch("patchBorrowed/{title}")]
+        public async Task<IActionResult> PatchBook(string title, bool isBorrowed)
         {
-            var put = _service.PatchCost(title, cost);
+            var put = _service.PatchBorrowed(title, isBorrowed);
             if (put)
                 return NoContent();
             else
@@ -101,9 +101,9 @@ namespace libraryAPI.Controllers
                 return NotFound();
         }
         [HttpPatch("patchCostAndDescription/{title}")]
-        public async Task<IActionResult> PatchBook(string title, double cost,string description)
+        public async Task<IActionResult> PatchBook(string title, bool isBorrowed, string description)
         {
-            var put = _service.PatchCostAndDescription(title,description, cost);
+            var put = _service.PatchBorrowedAndDescription(title,description, isBorrowed);
             if (put)
                 return NoContent();
             else
