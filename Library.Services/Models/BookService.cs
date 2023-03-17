@@ -72,12 +72,6 @@ namespace Library.Services.Models
                 return false;
             return _repository.PatchDescription(title, description);
         }
-        public bool PatchBorrowedAndDescription(string title, string description, bool isBorrowed)
-        {
-            if (!ValidateDescription(description))
-                return false;
-            return _repository.PatchBorrowedAndDescription(title, description, isBorrowed);
-        }
         public IEnumerable<BookDTO> ListBooks()
         {
             return BooksToDTO(_repository.ListBooks());

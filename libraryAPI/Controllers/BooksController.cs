@@ -81,17 +81,25 @@ namespace libraryAPI.Controllers
             else
                 return CreatedAtAction(nameof(GetBook), new { id = book.BookID }, BookService.BookToDTO(book));
         }
-        [HttpPatch("patchBorrowed/{title}")]
-        public async Task<IActionResult> PatchBook(string title, bool isBorrowed)
+        [HttpPatch("BorrowBook/{title}")]
+        public async Task<IActionResult> BorrowBook(string title)
         {
-            var put = _service.PatchBorrowed(title, isBorrowed);
+            var put = _service.PatchBorrowed(title, true);
             if (put)
                 return NoContent();
             else
                 return NotFound();        
         }
-
-        [HttpPatch("patchDescription/{title}")]
+        [HttpPatch("ReturnBook/{title}")]
+        public async Task<IActionResult> ReturnBook(string title)
+        {
+            var put = _service.PatchBorrowed(title, false);
+            if (put)
+                return NoContent();
+            else
+                return NotFound();
+        }
+        [HttpPatch("ChangeDescription/{title}")]
         public async Task<IActionResult> PatchBook(string title, string description)
         {
             var put = _service.PatchDescription(title, description);
@@ -100,16 +108,7 @@ namespace libraryAPI.Controllers
             else
                 return NotFound();
         }
-        [HttpPatch("patchCostAndDescription/{title}")]
-        public async Task<IActionResult> PatchBook(string title, bool isBorrowed, string description)
-        {
-            var put = _service.PatchBorrowedAndDescription(title,description, isBorrowed);
-            if (put)
-                return NoContent();
-            else
-                return NotFound();
 
-        }
         // DELETE: api/Books/5
         [HttpDelete("{title}")]
         public async Task<IActionResult> DeleteBook(string title)

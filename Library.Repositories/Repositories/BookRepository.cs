@@ -129,31 +129,6 @@ namespace Library.Repositories.Repositories
 
             return true;
         }
-        public bool PatchBorrowedAndDescription(string title,string description, bool isBorrowed)
-        {
-            var book = _context.Books.Where(b => b.Title == title).Single();
-            book.Description = description;
-            book.IsBorrowed = isBorrowed;
-            _context.Entry(book).State = EntityState.Modified;
-
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (_context.Books.Where(b => b.Title == title).Single() == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return true;
-        }
         public bool DeleteBook(string title)
         {
             if (_context.Books == null)

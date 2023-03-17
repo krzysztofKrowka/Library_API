@@ -34,7 +34,7 @@ namespace Library.Repositories.Repositories
             Librarian librarian = _context.Librarians.Where(b => b.LibrarianID == librarianID).Single();
             try
             {
-                _context.Librarians.Add(librarian);
+                _context.Librarians.Remove(librarian);
                 _context.SaveChanges();
                 return true;
             }
