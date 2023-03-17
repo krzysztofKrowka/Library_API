@@ -2,6 +2,7 @@
 using Library.Repositories.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace Library.Repositories.Repositories
 {
     public class AuthorRepository : IAuthorRepository
     {
-        private readonly BookContext _context;
-        public AuthorRepository(BookContext bookContext)
+        private readonly LibraryContext _context;
+        public AuthorRepository(LibraryContext bookContext)
         {
             _context = bookContext;
         }

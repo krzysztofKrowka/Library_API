@@ -3,6 +3,10 @@ using Library.Repositories.Repositories;
 using Library.Repositories.Models;
 using Library.Services.Models;
 using Library.Services.Interfaces;
+using Library.Services.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
+
 namespace libraryAPI.Controllers
 {
     [Route("[controller]")]
@@ -12,11 +16,12 @@ namespace libraryAPI.Controllers
         private readonly IBookService _service;
                
         [ActivatorUtilitiesConstructor]
-        public BooksController(BookContext bookContext)
+        public BooksController(LibraryContext libraryContext)
         {
-            _service = new BookService(this.ModelState, new BookRepository(bookContext));
+            _service = new BookService(this.ModelState, new BookRepository(libraryContext));
         }
 
+        
         // GET: api/Books
         [HttpGet]
         public ActionResult<IEnumerable<BookDTO>> GetBooks()
@@ -30,6 +35,7 @@ namespace libraryAPI.Controllers
                 
         }
 
+        
         [HttpGet("ByAuthor/")]
         public ActionResult<IEnumerable<BookDTO>> GetBooksByAuthor(string FirstName, string LastName)
         {
@@ -40,6 +46,8 @@ namespace libraryAPI.Controllers
 
             return Ok(_service.ListBooksByAuthor(FirstName, LastName));
         }
+        
+        
         // GET: api/Books/5
         [HttpGet("{title}")]
         public async Task<ActionResult<BookDTO>> GetBook(string title)
@@ -58,9 +66,11 @@ namespace libraryAPI.Controllers
             return Ok(book);
         }
 
+        
         // PUT: api/Books/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{title}")]
+        [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> PutBook(string title, BookDTO bookDTO)
         {
             var put = _service.PutBook(title, bookDTO);
@@ -70,9 +80,11 @@ namespace libraryAPI.Controllers
                 return BadRequest();
         }
 
+        
         // POST: api/Books
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Librarian,Assistant")]
         public async Task<ActionResult<Book>> PostBook(BookDTO bookDTO)
         {
             Book book = _service.CreateBook(bookDTO);
@@ -81,7 +93,10 @@ namespace libraryAPI.Controllers
             else
                 return CreatedAtAction(nameof(GetBook), new { id = book.BookID }, BookService.BookToDTO(book));
         }
+        
+        
         [HttpPatch("BorrowBook/{title}")]
+        [Authorize(Roles = "Librarian,Assistant,Reader")]
         public async Task<IActionResult> BorrowBook(string title)
         {
             var put = _service.PatchBorrowed(title, true);
@@ -90,7 +105,10 @@ namespace libraryAPI.Controllers
             else
                 return NotFound();        
         }
+        
+        
         [HttpPatch("ReturnBook/{title}")]
+        [Authorize(Roles = "Librarian,Assistant,Reader")]
         public async Task<IActionResult> ReturnBook(string title)
         {
             var put = _service.PatchBorrowed(title, false);
@@ -99,7 +117,10 @@ namespace libraryAPI.Controllers
             else
                 return NotFound();
         }
+        
+        
         [HttpPatch("ChangeDescription/{title}")]
+        [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> PatchBook(string title, string description)
         {
             var put = _service.PatchDescription(title, description);
@@ -109,8 +130,10 @@ namespace libraryAPI.Controllers
                 return NotFound();
         }
 
+        
         // DELETE: api/Books/5
         [HttpDelete("{title}")]
+        [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> DeleteBook(string title)
         {
             var delete = _service.DeleteBook(title);

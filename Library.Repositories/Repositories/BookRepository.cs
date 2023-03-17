@@ -5,8 +5,8 @@ namespace Library.Repositories.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        private readonly BookContext _context;
-       public BookRepository(BookContext bookContext) 
+        private readonly LibraryContext _context;
+       public BookRepository(LibraryContext bookContext) 
        {
             _context = bookContext;
        }

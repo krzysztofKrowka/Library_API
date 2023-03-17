@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Library.Repositories.Interfaces;
 using Library.Services.Interfaces;
 using Microsoft.CodeAnalysis;
+using Library.Services.Models;
 
 //using System.Web.Mvc;
-namespace Library.Services.Models
+namespace Library.Services.Services
 {
     public class BookService : IBookService
     {
@@ -61,7 +62,7 @@ namespace Library.Services.Models
                 return false;
             return _repository.PutBook(title, book);
         }
-        public bool PatchBorrowed(string title,bool isBorrowed)
+        public bool PatchBorrowed(string title, bool isBorrowed)
         {
 
             return _repository.PatchBorrowed(title, isBorrowed);

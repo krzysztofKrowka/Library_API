@@ -1,6 +1,7 @@
 ﻿using Library.Repositories.Interfaces;
 using Library.Repositories.Models;
 using Library.Services.Interfaces;
+using Library.Services.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Library.Services.Models
+namespace Library.Services.Services
 {
     public class AuthorService : IAuthorService
     {
@@ -73,7 +74,7 @@ namespace Library.Services.Models
 
         public bool PutAuthor(Guid id, AuthorDTO authorToPut)
         {
-            if(!ValidateAuthor(authorToPut))
+            if (!ValidateAuthor(authorToPut))
                 return false;
             var author = new Author
             {
@@ -81,12 +82,19 @@ namespace Library.Services.Models
                 LastName = authorToPut.LastName,
                 BirthDate = authorToPut.BirthDate
             };
-            return _repository.PutAuthor(id,author);
+            return _repository.PutAuthor(id, author);
         }
 
-        public Author ListAuthorOfBook(string title)
+        public AuthorDTO ListAuthorOfBook(string title)
         {
-            return _repository.ListAuthorOfBook(title);
+            var author = _repository.ListAuthorOfBook(title);
+            AuthorDTO authorDTO = new()
+            {
+                BirthDate = author.BirthDate,
+                FirstName = author.FirstName,
+                LastName = author.LastName
+            };
+            return authorDTO;
         }
     }
 }

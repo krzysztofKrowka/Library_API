@@ -15,7 +15,7 @@ namespace Library.Services.Interfaces
         Author CreateAuthor(AuthorDTO authorToCreate);
         IEnumerable<Author> ListAuthors();
         public bool AuthorExists(Guid id);
-        public Author ListAuthorOfBook(string title);
+        public AuthorDTO ListAuthorOfBook(string title);
 
     }
 }
