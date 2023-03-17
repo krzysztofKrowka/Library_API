@@ -91,7 +91,7 @@ namespace libraryAPI.Controllers
             if(book==null)
                 return BadRequest("Error");
             else
-                return CreatedAtAction(nameof(GetBook), new { id = book.BookID }, BookService.BookToDTO(book));
+                return Created(nameof(GetBook), bookDTO);
         }
         
         

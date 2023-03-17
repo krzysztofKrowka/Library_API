@@ -52,11 +52,11 @@ namespace libraryAPI.Controllers
         [Authorize(Roles = "Librarian")]
         public async Task<ActionResult<Librarian>> PostLibrarian(LibrarianDTO librarianDTO)
         {
-            Librarian book = _service.CreateLibrarian(librarianDTO);
-            if (book == null)
+            Librarian librarian = _service.CreateLibrarian(librarianDTO);
+            if (librarian == null)
                 return BadRequest("Error");
             else
-                return CreatedAtAction(nameof(GetLibrarian), new { id = book.LibrarianID }, librarianDTO);
+                return Created(nameof(GetLibrarian), librarian);
         }
         [HttpDelete("{id}")]
         [Authorize(Roles = "Librarian")]

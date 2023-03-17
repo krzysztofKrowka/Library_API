@@ -5,9 +5,11 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libraryAPI", "libraryAPI\libraryAPI.csproj", "{A65AD3EC-B015-4B07-94BA-2B8911D65D60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Services", "Library.Services\Library.Services.csproj", "{4506B4D3-62F6-4CD2-BD26-6E51AF81D59A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Services", "Library.Services\Library.Services.csproj", "{4506B4D3-62F6-4CD2-BD26-6E51AF81D59A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Repositories", "Library.Repositories\Library.Repositories.csproj", "{C7CFDDA7-1892-4BED-B61D-F0C5E83F5D45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Repositories", "Library.Repositories\Library.Repositories.csproj", "{C7CFDDA7-1892-4BED-B61D-F0C5E83F5D45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3D16F584-D39B-4D71-A385-208F8FCAA2F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

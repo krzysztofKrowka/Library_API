@@ -92,7 +92,7 @@ namespace libraryAPI.Controllers
             if (authorToCreate == null)
                 return BadRequest("Error");
             else
-                return CreatedAtAction(nameof(GetAuthor), new { id = authorToCreate.AuthorID }, author);
+                return Created(nameof(GetAuthor), author);
         }
         
         // DELETE: api/Authors/5
