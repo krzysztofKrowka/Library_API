@@ -21,7 +21,7 @@ namespace Library.Services.Services
 
         protected bool ValidateBook(BookDTO bookToValidate)
         {
-            bool validate = true;
+            var validate = true;
             if (bookToValidate == null)
                 return false;
             if (_repository.BookExists(bookToValidate.Title))
@@ -95,8 +95,7 @@ namespace Library.Services.Services
                 Description = bookDTO.Description,
             };
             // Validation logic
-            //  if (!ValidateBook(bookDTO))
-            //    return null;
+
 
             // Database logic
             try
@@ -125,7 +124,7 @@ namespace Library.Services.Services
         }
         public static IEnumerable<BookDTO> BooksToDTO(IEnumerable<Book> books)
         {
-            List<BookDTO> result = new List<BookDTO>();
+            var result = new List<BookDTO>();
             foreach (var book in books)
                 result.Add(BookToDTO(book));
             return result;

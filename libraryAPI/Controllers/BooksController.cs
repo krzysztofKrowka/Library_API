@@ -87,7 +87,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<ActionResult<Book>> PostBook(BookDTO bookDTO)
         {
-            Book book = _service.CreateBook(bookDTO);
+            var book = _service.CreateBook(bookDTO);
             if (book == null)
                 return BadRequest("Error");
             else

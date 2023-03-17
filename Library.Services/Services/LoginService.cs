@@ -19,7 +19,7 @@ namespace Library.Services.Services
         }
         public string Login(UserLogin userLogin)
         {
-            User user = new User
+            var user = new User
             {
                 Username = userLogin.Username,
                 Password = userLogin.Password

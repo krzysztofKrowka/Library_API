@@ -31,7 +31,7 @@ namespace Library.Repositories.Repositories
 
         public bool DeleteLibrarian(Guid librarianID)
         {
-            Librarian librarian = _context.Librarians.Where(b => b.LibrarianID == librarianID).Single();
+            var librarian = _context.Librarians.Where(b => b.LibrarianID == librarianID).Single();
             try
             {
                 _context.Librarians.Remove(librarian);

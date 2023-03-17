@@ -48,8 +48,8 @@ namespace Library.Repositories.Repositories
             {
                 return false;
             }
-            List<Book> books = _context.Books.Where(b => b.AuthorFirstName == author.FirstName && b.AuthorLastName == author.LastName).ToList();
-            List<BookAuthors> bookAuthors = _context.BookAuthors.Where(b => b.Author_ID == id).ToList();
+            var books = _context.Books.Where(b => b.AuthorFirstName == author.FirstName && b.AuthorLastName == author.LastName).ToList();
+            var bookAuthors = _context.BookAuthors.Where(b => b.Author_ID == id).ToList();
             if (books != null)
             {
                 foreach (var book in books)
@@ -73,9 +73,9 @@ namespace Library.Repositories.Repositories
 
         public Author ListAuthorOfBook(string title)
         {
-            string firstName = _context.Books.Where(b =>b.Title==title).Single().AuthorFirstName;
-            string lastName = _context.Books.Where(b => b.Title == title).Single().AuthorLastName;
-            Author author = _context.Authors.Where(a => a.FirstName ==firstName && a.LastName == lastName).Single();
+            var firstName = _context.Books.Where(b =>b.Title==title).Single().AuthorFirstName;
+            var lastName = _context.Books.Where(b => b.Title == title).Single().AuthorLastName;
+            var author = _context.Authors.Where(a => a.FirstName ==firstName && a.LastName == lastName).Single();
             return author;
         }
         public IEnumerable<Author> ListAuthors()

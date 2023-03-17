@@ -23,9 +23,9 @@ namespace libraryAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult Login(UserLogin userLogin)
+        public async Task<ActionResult> Login(UserLogin userLogin)
         {
-            var response = _loginService.Login(userLogin);
+            var response =_loginService.Login(userLogin);
             if(response==null) 
                 return NotFound("user not found");
             

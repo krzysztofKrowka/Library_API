@@ -21,7 +21,7 @@ namespace Library.Services.Services
         }
         protected bool ValidateAuthor(AuthorDTO author)
         {
-            bool validation = true;
+            var validation = true;
             if (author.BirthDate.Year < 100 || author.BirthDate.Year > 2023)
                 validation = false;
             if (!char.IsUpper(author.FirstName[0]))
@@ -88,7 +88,7 @@ namespace Library.Services.Services
         public AuthorDTO ListAuthorOfBook(string title)
         {
             var author = _repository.ListAuthorOfBook(title);
-            AuthorDTO authorDTO = new()
+            var authorDTO = new AuthorDTO()
             {
                 BirthDate = author.BirthDate,
                 FirstName = author.FirstName,

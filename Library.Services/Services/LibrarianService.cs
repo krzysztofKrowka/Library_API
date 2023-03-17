@@ -22,7 +22,7 @@ namespace Library.Services.Services
 
         protected bool ValidateLibrarian(LibrarianDTO librarian)
         {
-            bool validation = true;
+            var validation = true;
             if (librarian == null)
                 validation = false;
             if (!char.IsUpper(librarian.FirstName[0]))

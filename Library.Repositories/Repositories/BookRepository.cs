@@ -12,13 +12,13 @@ namespace Library.Repositories.Repositories
        }
         
         public IEnumerable<Book> ListBooksByAuthor(string FirstName, string LastName) { 
-            List<Book> books = new List<Book>();
-            Guid authorID = _context.Authors.Where(x => x.FirstName == FirstName && x.LastName == LastName).FirstOrDefault().AuthorID;
-            List<BookAuthors> booksByAuthor = _context.BookAuthors.Where(b => b.Author_ID == authorID).ToList();
+            var books = new List<Book>();
+            var authorID = _context.Authors.Where(x => x.FirstName == FirstName && x.LastName == LastName).FirstOrDefault().AuthorID;
+            var booksByAuthor = _context.BookAuthors.Where(b => b.Author_ID == authorID).ToList();
             
             foreach(var book in booksByAuthor) 
             { 
-                Guid id = book.Book_ID;
+                var id = book.Book_ID;
                 var correctBook = _context.Books.Where(b => b.BookID == id).Single();
                 books.Add(correctBook);
             }
@@ -36,7 +36,7 @@ namespace Library.Repositories.Repositories
         {
             try
             {
-                BookAuthors author = new BookAuthors();
+                var author = new BookAuthors();
                 author.ID = Guid.NewGuid();
                 author.Book_ID =book.BookID;
                 author.Author_ID = _context.Authors.Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName).Single().AuthorID;  

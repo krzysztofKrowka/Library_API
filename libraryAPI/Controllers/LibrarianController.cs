@@ -53,7 +53,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian")]
         public async Task<ActionResult<Librarian>> PostLibrarian(LibrarianDTO librarianDTO)
         {
-            Librarian librarian = _service.CreateLibrarian(librarianDTO);
+            var librarian = _service.CreateLibrarian(librarianDTO);
             if (librarian == null)
                 return BadRequest("Error");
             else
