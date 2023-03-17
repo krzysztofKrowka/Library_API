@@ -1,4 +1,5 @@
-﻿using Library.Repositories.Models;
+﻿using Library.Repositories.Interfaces;
+using Library.Repositories.Models;
 using Library.Repositories.Repositories;
 using Library.Services.Interfaces;
 using Library.Services.Models;
@@ -13,23 +14,22 @@ namespace Library.Services.Services
 {
     public class LibrarianService : ILibrarianService
     {
-        LibrarianRepository _repository;
-        ModelStateDictionary _modelState;
-        public LibrarianService(ModelStateDictionary modelState, LibrarianRepository repository)
+        ILibrarianRepository _repository;
+        public LibrarianService(ILibrarianRepository repository)
         {
             _repository = repository;
-            _modelState = modelState;
         }
 
         protected bool ValidateLibrarian(LibrarianDTO librarian)
         {
+            bool validation = true;
             if (librarian == null)
-                _modelState.AddModelError("Librarian", "Librarian is null");
+                validation = false;
             if (!char.IsUpper(librarian.FirstName[0]))
-                _modelState.AddModelError("First Name", "First name must start with upper letter");
+                validation = false;
             if (!char.IsUpper(librarian.LastName[0]))
-                _modelState.AddModelError("Last Name", "Last name must start with upper letter");
-            return _modelState.IsValid;
+                validation = false;
+            return validation;
         }
         public Librarian CreateLibrarian(LibrarianDTO librarianDTO)
         {

@@ -13,23 +13,23 @@ namespace Library.Services.Services
 {
     public class AuthorService : IAuthorService
     {
-        private ModelStateDictionary _modelState;
         private readonly IAuthorRepository _repository;
 
-        public AuthorService(ModelStateDictionary modelState, IAuthorRepository repository)
+        public AuthorService(IAuthorRepository repository)
         {
-            _modelState = modelState;
             _repository = repository;
         }
         protected bool ValidateAuthor(AuthorDTO author)
         {
+            bool validation = true;
             if (author.BirthDate.Year < 100 || author.BirthDate.Year > 2023)
-                _modelState.AddModelError("Birth Date", "Birth date is wrong");
+                validation = false;
             if (!char.IsUpper(author.FirstName[0]))
-                _modelState.AddModelError("First Name", "First name must start with upper letter");
+                validation = false;
             if (!char.IsUpper(author.LastName[0]))
-                _modelState.AddModelError("Last Name", "Last name must start with upper letter");
-            return _modelState.IsValid;
+                validation = false;
+            return validation;
+                        
         }
         public bool AuthorExists(Guid id)
         {

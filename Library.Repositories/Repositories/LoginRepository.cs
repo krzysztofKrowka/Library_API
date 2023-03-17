@@ -15,8 +15,8 @@ namespace Library.Repositories.Repositories
     public class LoginRepository : ILoginRepository
     {
         private readonly IConfiguration _configuration;
-        private readonly LibraryContext _context;
-        public LoginRepository(IConfiguration configuration, LibraryContext context)
+        private readonly ILibraryContext _context;
+        public LoginRepository(IConfiguration configuration, ILibraryContext context)
         {
             _configuration = configuration;
             _context = context;

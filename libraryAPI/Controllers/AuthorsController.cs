@@ -7,7 +7,7 @@ using Library.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 
-namespace libraryAPI.Controllers
+namespace Library.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -15,10 +15,9 @@ namespace libraryAPI.Controllers
     {
         private readonly IAuthorService _service;
 
-        [ActivatorUtilitiesConstructor]
-        public AuthorsController(LibraryContext libraryContext)
+        public AuthorsController(IAuthorService service)
         {
-            _service = new AuthorService(this.ModelState, new AuthorRepository(libraryContext));
+            _service = service;
         }
 
 
@@ -94,7 +93,7 @@ namespace libraryAPI.Controllers
             else
                 return Created(nameof(GetAuthor), author);
         }
-        
+
         // DELETE: api/Authors/5
         [HttpDelete("{id}")]
         [Authorize(Roles = "Librarian,Assistant")]

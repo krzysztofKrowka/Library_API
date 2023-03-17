@@ -13,7 +13,7 @@ namespace Library.Services.Services
     public class LoginService : ILoginService
     {
         private readonly ILoginRepository _loginRepository;
-        public LoginService(LoginRepository loginRepository)
+        public LoginService(ILoginRepository loginRepository)
         {
             _loginRepository = loginRepository;
         }

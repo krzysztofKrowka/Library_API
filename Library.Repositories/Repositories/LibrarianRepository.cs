@@ -10,8 +10,8 @@ namespace Library.Repositories.Repositories
 {
     public class LibrarianRepository : ILibrarianRepository
     {
-        LibraryContext _context;
-        public LibrarianRepository(LibraryContext context)
+        ILibraryContext _context;
+        public LibrarianRepository(ILibraryContext context)
         {
             _context = context;
         }

@@ -13,8 +13,8 @@ namespace Library.Repositories.Repositories
 {
     public class AuthorRepository : IAuthorRepository
     {
-        private readonly LibraryContext _context;
-        public AuthorRepository(LibraryContext bookContext)
+        private readonly ILibraryContext _context;
+        public AuthorRepository(ILibraryContext bookContext)
         {
             _context = bookContext;
         }
@@ -93,8 +93,6 @@ namespace Library.Repositories.Repositories
             authorToPut.FirstName = author.FirstName;
             authorToPut.LastName = author.LastName;
             authorToPut.BirthDate = author.BirthDate;
-            _context.Entry(authorToPut).State = EntityState.Modified;
-
             try
             {
                 _context.SaveChanges();

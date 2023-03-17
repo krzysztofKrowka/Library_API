@@ -5,17 +5,19 @@ namespace Library.Repositories.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        private readonly LibraryContext _context;
-       public BookRepository(LibraryContext bookContext) 
+       private readonly ILibraryContext _context;
+       public BookRepository(ILibraryContext libraryContext) 
        {
-            _context = bookContext;
+            _context = libraryContext;
        }
         
         public IEnumerable<Book> ListBooksByAuthor(string FirstName, string LastName) { 
             List<Book> books = new List<Book>();
             Guid authorID = _context.Authors.Where(x => x.FirstName == FirstName && x.LastName == LastName).FirstOrDefault().AuthorID;
             List<BookAuthors> booksByAuthor = _context.BookAuthors.Where(b => b.Author_ID == authorID).ToList();
-            foreach(var book in booksByAuthor) { 
+            
+            foreach(var book in booksByAuthor) 
+            { 
                 Guid id = book.Book_ID;
                 var correctBook = _context.Books.Where(b => b.BookID == id).Single();
                 books.Add(correctBook);
@@ -61,8 +63,6 @@ namespace Library.Repositories.Repositories
             book.Category = bookDTO.Category;
             book.PublicationDate = bookDTO.PublicationDate;
             book.IsBorrowed = bookDTO.IsBorrowed;
-            _context.Entry(book).State = EntityState.Modified;
-
             try
             {
                 _context.SaveChanges();
@@ -85,8 +85,6 @@ namespace Library.Repositories.Repositories
         {
             var book = _context.Books.Where(b => b.Title == title).Single();
             book.IsBorrowed = isBorrwed;
-            _context.Entry(book).State = EntityState.Modified;
-
             try
             {
                 _context.SaveChanges();
@@ -109,8 +107,6 @@ namespace Library.Repositories.Repositories
         {
             var book = _context.Books.Where(b => b.Title == title).Single();
             book.Description = description;
-            _context.Entry(book).State = EntityState.Modified;
-
             try
             {
                 _context.SaveChanges();

@@ -4,6 +4,7 @@ using Library.Repositories.Interfaces;
 using Library.Services.Interfaces;
 using Microsoft.CodeAnalysis;
 using Library.Services.Models;
+using System.ComponentModel.DataAnnotations;
 
 //using System.Web.Mvc;
 namespace Library.Services.Services
@@ -11,36 +12,35 @@ namespace Library.Services.Services
     public class BookService : IBookService
     {
 
-        private ModelStateDictionary _modelState;
         private readonly IBookRepository _repository;
 
-        public BookService(ModelStateDictionary modelState, IBookRepository repository)
+        public BookService( IBookRepository repository)
         {
-            _modelState = modelState;
             _repository = repository;
         }
 
         protected bool ValidateBook(BookDTO bookToValidate)
         {
+            bool validate = true;
             if (bookToValidate == null)
                 return false;
             if (_repository.BookExists(bookToValidate.Title))
-                _modelState.AddModelError("Book", "Book with that title is already added");
+                validate = false;
             if (bookToValidate.PublicationDate < 200 || bookToValidate.PublicationDate > 2024)
-                _modelState.AddModelError("Publication Date", "Publication date is not correct");
+                validate = false;
             if (bookToValidate.Title.Trim().Length == 0)
-                _modelState.AddModelError("Title", "Title is required.");
+                validate = false;
             if (!char.IsUpper(bookToValidate.Title.Trim()[0]))
-                _modelState.AddModelError("Title", "Title's first letter must be upper.");
+                validate = false;
             if (bookToValidate.Description.Length <= 50)
-                _modelState.AddModelError("Description", "Description must be over 50 characters long.");
-            return _modelState.IsValid;
+                validate = false;
+            return validate;        
         }
         protected bool ValidateDescription(string description)
         {
             if (description.Length <= 50)
-                _modelState.AddModelError("Description", "Description must be over 50 characters long.");
-            return _modelState.IsValid;
+                return false;
+            return true;
         }
         public bool DeleteBook(string title)
         {

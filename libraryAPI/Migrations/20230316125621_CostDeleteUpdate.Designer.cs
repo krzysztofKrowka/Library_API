@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace libraryAPI.Migrations
+namespace Library.API.Migrations
 {
     [DbContext(typeof(LibraryContext))]
     [Migration("20230316125621_CostDeleteUpdate")]

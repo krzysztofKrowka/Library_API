@@ -4,7 +4,10 @@ using Library.Repositories.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Library.Repositories.Interfaces;
-namespace libraryAPI
+using Library.Services.Interfaces;
+using Library.Services.Services;
+
+namespace Library.API
 {
     public class Startup
     {
@@ -13,7 +16,10 @@ namespace libraryAPI
             services.AddMvc();
 
             services.AddScoped<IBookRepository, BookRepository>();
-            services.AddDbContextPool<LibraryContext>(options => options.UseSqlServer("Server=127.0.0.1;Database=Library;Trusted_Connection=True;TrustServerCertificate=True;"));
+            services.AddScoped<IBookService, BookService>();
+
+            
+            services.AddTransient<ILibraryContext, LibraryContext>();
             services.AddControllers();
         }
         public void Configure(IApplicationBuilder app)

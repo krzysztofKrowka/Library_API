@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace libraryAPI.Migrations
+namespace Library.API.Migrations
 {
     /// <inheritdoc />
     public partial class CostDeleteUpdate : Migration

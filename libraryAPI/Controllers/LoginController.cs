@@ -5,6 +5,7 @@ using Library.Services.Services;
 using Library.Repositories.Repositories;
 using Library.Services.Models;
 using Microsoft.AspNetCore.Authorization;
+using FluentAssertions.Common;
 
 namespace libraryAPI.Controllers
 {
@@ -13,12 +14,13 @@ namespace libraryAPI.Controllers
     public class LoginController :ControllerBase
     {
         private readonly ILoginService _loginService;
-
-        [ActivatorUtilitiesConstructor]
-        public LoginController(LibraryContext libraryContext,IConfiguration configuration)
+        
+        public LoginController(ILoginService loginService)
         {
-            _loginService = new LoginService(new LoginRepository(configuration,libraryContext));
+            _loginService = loginService;
         }
+        
+
         [AllowAnonymous]
         [HttpPost]
         public ActionResult Login(UserLogin userLogin)

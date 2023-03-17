@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Library.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 
-namespace libraryAPI.Controllers
+namespace Library.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -14,13 +14,14 @@ namespace libraryAPI.Controllers
     {
         private readonly ILibrarianService _service;
 
-        [ActivatorUtilitiesConstructor]
-        public LibrarianController(LibraryContext libraryContext)
+        public LibrarianController(ILibrarianService service)
         {
-            _service = new LibrarianService(this.ModelState, new LibrarianRepository(libraryContext));
+            _service = service;
         }
+
+
         [HttpGet]
-        [Authorize(Roles ="Librarian")]
+        [Authorize(Roles = "Librarian")]
         public ActionResult<IEnumerable<Librarian>> GetLibrarians()
         {
             if (_service.ListLibrarians() == null)
