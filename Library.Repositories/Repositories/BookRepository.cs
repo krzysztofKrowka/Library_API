@@ -11,28 +11,28 @@ namespace Library.Repositories.Repositories
             _context = libraryContext;
        }
         
-        public IEnumerable<Book> ListBooksByAuthor(string FirstName, string LastName) { 
+        public async Task<IEnumerable<Book>> ListBooksByAuthor(string FirstName, string LastName) { 
             var books = new List<Book>();
-            var authorID = _context.Authors.Where(x => x.FirstName == FirstName && x.LastName == LastName).FirstOrDefault().AuthorID;
-            var booksByAuthor = _context.BookAuthors.Where(b => b.Author_ID == authorID).ToList();
+            var authorID = await _context.Authors.Where(x => x.FirstName == FirstName && x.LastName == LastName).FirstOrDefaultAsync();
+            var booksByAuthor =await _context.BookAuthors.Where(b => b.Author_ID == authorID.AuthorID).ToListAsync();
             
             foreach(var book in booksByAuthor) 
             { 
                 var id = book.Book_ID;
-                var correctBook = _context.Books.Where(b => b.BookID == id).Single();
+                var correctBook = await _context.Books.Where(b => b.BookID == id).SingleAsync();
                 books.Add(correctBook);
             }
             return books;
         }
-        public IEnumerable<Book> ListBooks()
+        public async Task<IEnumerable<Book>> ListBooks()
         {
-            return _context.Books.Select(x => x).ToList();
+            return await _context.Books.ToListAsync();
         }
-        public Book ListBook(string title)
+        public async Task<Book> ListBook(string title)
         {
-            return _context.Books.Where(b => b.Title == title).Single();
+            return await _context.Books.Where(b => b.Title == title).SingleAsync();
         }
-        public Book CreateBook(Book book)
+        public async Task<Book> CreateBook(Book book)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Library.Repositories.Repositories
                 author.Author_ID = _context.Authors.Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName).Single().AuthorID;  
                 _context.BookAuthors.Add(author);
                 _context.Books.Add(book);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return book;
             }
             catch
@@ -50,13 +50,13 @@ namespace Library.Repositories.Repositories
                 return null;
             }
         }
-        public bool PutBook(string title,Book bookDTO)
+        public async Task<bool> PutBook(string title,Book bookDTO)
         {
             if (title != bookDTO.Title)
             {
                 return false;
             }
-            var book = _context.Books.Where(b => b.Title == title).Single();
+            var book = await _context.Books.Where(b => b.Title == title).SingleAsync();
             book.Description = bookDTO.Description;
             book.AuthorFirstName = bookDTO.AuthorFirstName;
             book.AuthorLastName = bookDTO.AuthorLastName;
@@ -65,11 +65,11 @@ namespace Library.Repositories.Repositories
             book.IsBorrowed = bookDTO.IsBorrowed;
             try
             {
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_context.Books.Where(b => b.Title == title).Single() == null)
+                if (await _context.Books.Where(b => b.Title == title).SingleAsync() == null)
                 {
                     return false;
                 }
@@ -81,17 +81,17 @@ namespace Library.Repositories.Repositories
 
             return true;
         }
-        public bool PatchBorrowed(string title,bool isBorrwed)
+        public async Task<bool> PatchBorrowed(string title,bool isBorrwed)
         {
-            var book = _context.Books.Where(b => b.Title == title).Single();
+            var book =await _context.Books.Where(b => b.Title == title).SingleAsync();
             book.IsBorrowed = isBorrwed;
             try
             {
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_context.Books.Where(b => b.Title == title).Single() == null)
+                if (await _context.Books.Where(b => b.Title == title).SingleAsync() == null)
                 {
                     return false;
                 }
@@ -103,17 +103,17 @@ namespace Library.Repositories.Repositories
 
             return true;
         }
-        public bool PatchDescription(string title, string description)
+        public async Task<bool> PatchDescription(string title, string description)
         {
-            var book = _context.Books.Where(b => b.Title == title).Single();
+            var book =await _context.Books.Where(b => b.Title == title).SingleAsync();
             book.Description = description;
             try
             {
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_context.Books.Where(b => b.Title == title).Single() == null)
+                if (await _context.Books.Where(b => b.Title == title).SingleAsync() == null)
                 {
                     return false;
                 }
@@ -125,25 +125,25 @@ namespace Library.Repositories.Repositories
 
             return true;
         }
-        public bool DeleteBook(string title)
+        public async Task<bool> DeleteBook(string title)
         {
             if (_context.Books == null)
             {
                 return false;
             }
-            var book = _context.Books.Where(b => b.Title == title).First();
+            var book =await _context.Books.Where(b => b.Title == title).FirstAsync();
             if (book == null)
             {
                 return false;
             }
-            var bookAuthor = _context.BookAuthors.Where(b =>b.Book_ID == book.BookID).First();
+            var bookAuthor =await _context.BookAuthors.Where(b =>b.Book_ID == book.BookID).FirstAsync();
             _context.Books.Remove(book);
             _context.BookAuthors.Remove(bookAuthor);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
         public bool BookExists(string title) {
-            return (_context.Books?.Any(e => e.Title == title)).GetValueOrDefault();
+            return  _context.Books.Any(e => e.Title == title);
         }
 
     }

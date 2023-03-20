@@ -42,11 +42,11 @@ namespace Library.Services.Services
                 return false;
             return true;
         }
-        public bool DeleteBook(string title)
+        public async Task<bool> DeleteBook(string title)
         {
-            return _repository.DeleteBook(title);
+            return await _repository.DeleteBook(title);
         }
-        public bool PutBook(string title, BookDTO bookDTO)
+        public async Task<bool> PutBook(string title, BookDTO bookDTO)
         {
             var book = new Book
             {
@@ -60,28 +60,28 @@ namespace Library.Services.Services
             };
             if (!ValidateBook(bookDTO))
                 return false;
-            return _repository.PutBook(title, book);
+            return await _repository.PutBook(title, book);
         }
-        public bool PatchBorrowed(string title, bool isBorrowed)
+        public async Task<bool> PatchBorrowed(string title, bool isBorrowed)
         {
 
-            return _repository.PatchBorrowed(title, isBorrowed);
+            return await _repository.PatchBorrowed(title, isBorrowed);
         }
-        public bool PatchDescription(string title, string description)
+        public async Task<bool> PatchDescription(string title, string description)
         {
             if (!ValidateDescription(description))
                 return false;
-            return _repository.PatchDescription(title, description);
+            return await _repository.PatchDescription(title, description);
         }
-        public IEnumerable<BookDTO> ListBooks()
+        public async Task<IEnumerable<BookDTO>> ListBooks()
         {
-            return BooksToDTO(_repository.ListBooks());
+            return BooksToDTO(await _repository.ListBooks());
         }
-        public BookDTO ListBook(string title)
+        public async Task<BookDTO> ListBook(string title)
         {
-            return BookToDTO(_repository.ListBook(title));
+            return BookToDTO(await _repository.ListBook(title));
         }
-        public Book CreateBook(BookDTO bookDTO)
+        public async Task<Book> CreateBook(BookDTO bookDTO)
         {
             var book = new Book
             {
@@ -100,7 +100,7 @@ namespace Library.Services.Services
             // Database logic
             try
             {
-                book = _repository.CreateBook(book);
+                book =await _repository.CreateBook(book);
             }
             catch
             {
@@ -130,9 +130,9 @@ namespace Library.Services.Services
             return result;
         }
 
-        public IEnumerable<Book> ListBooksByAuthor(string FirstName, string LastName)
+        public async Task<IEnumerable<Book>> ListBooksByAuthor(string FirstName, string LastName)
         {
-            return _repository.ListBooksByAuthor(FirstName, LastName);
+            return await _repository.ListBooksByAuthor(FirstName, LastName);
         }
     }
 }

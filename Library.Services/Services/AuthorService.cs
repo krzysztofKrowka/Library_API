@@ -31,12 +31,12 @@ namespace Library.Services.Services
             return validation;
                         
         }
-        public bool AuthorExists(Guid id)
+        public async Task<bool> AuthorExists(Guid id)
         {
-            return _repository.AuthorExists(id);
+            return await _repository.AuthorExists(id);
         }
 
-        public Author CreateAuthor(AuthorDTO authorToCreate)
+        public async Task<Author> CreateAuthor(AuthorDTO authorToCreate)
         {
             if (!ValidateAuthor(authorToCreate))
                 return null;
@@ -48,31 +48,30 @@ namespace Library.Services.Services
             };
             try
             {
-                author = _repository.CreateAuthor(author);
+                return await _repository.CreateAuthor(author);
             }
             catch
             {
                 return null;
             }
-            return author;
         }
 
-        public bool DeleteAuthor(Guid id)
+        public async Task<bool> DeleteAuthor(Guid id)
         {
-            return _repository.DeleteAuthor(id);
+            return await _repository.DeleteAuthor(id);
         }
 
-        public Author ListAuthor(Guid id)
+        public async Task<Author> ListAuthor(Guid id)
         {
-            return _repository.ListAuthor(id);
+            return await _repository.ListAuthor(id);
         }
 
-        public IEnumerable<Author> ListAuthors()
+        public async Task<IEnumerable<Author>> ListAuthors()
         {
-            return _repository.ListAuthors();
+            return await _repository.ListAuthors();
         }
 
-        public bool PutAuthor(Guid id, AuthorDTO authorToPut)
+        public async Task<bool> PutAuthor(Guid id, AuthorDTO authorToPut)
         {
             if (!ValidateAuthor(authorToPut))
                 return false;
@@ -82,12 +81,12 @@ namespace Library.Services.Services
                 LastName = authorToPut.LastName,
                 BirthDate = authorToPut.BirthDate
             };
-            return _repository.PutAuthor(id, author);
+            return await _repository.PutAuthor(id, author);
         }
 
-        public AuthorDTO ListAuthorOfBook(string title)
+        public async Task<AuthorDTO> ListAuthorOfBook(string title)
         {
-            var author = _repository.ListAuthorOfBook(title);
+            var author =await _repository.ListAuthorOfBook(title);
             var authorDTO = new AuthorDTO()
             {
                 BirthDate = author.BirthDate,

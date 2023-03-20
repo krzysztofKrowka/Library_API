@@ -5,13 +5,13 @@ namespace Library.Services.Interfaces
 {
     public interface IBookService
     {
-        IEnumerable<Book> ListBooksByAuthor(string FirstName, string LastName);
-        bool PatchDescription(string title, string description);
-        bool PatchBorrowed(string title, bool isBorrowed);
-        bool PutBook(string title, BookDTO bookDTO);
-        bool DeleteBook(string title);
-        BookDTO ListBook(string title);
-        Book CreateBook(BookDTO productToCreate);
-        IEnumerable<BookDTO> ListBooks();
+        Task<IEnumerable<Book>> ListBooksByAuthor(string FirstName, string LastName);
+        Task<bool> PatchDescription(string title, string description);
+        Task<bool> PatchBorrowed(string title, bool isBorrowed);
+        Task<bool> PutBook(string title, BookDTO bookDTO);
+        Task<bool> DeleteBook(string title);
+        Task<BookDTO> ListBook(string title);
+        Task<Book> CreateBook(BookDTO productToCreate);
+        Task<IEnumerable<BookDTO>> ListBooks();
     }
 }

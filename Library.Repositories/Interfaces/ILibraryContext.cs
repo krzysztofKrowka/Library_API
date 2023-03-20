@@ -10,12 +10,12 @@ namespace Library.Repositories.Interfaces
 {
     public interface ILibraryContext
     {
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Author> Authors { get; set; }
-        public DbSet<BookAuthors> BookAuthors { get; set; }
-        public DbSet<Librarian> Librarians { get; set; }
-        public List<User> Users { get; }
+        DbSet<Book> Books { get; set; }
+        DbSet<Author> Authors { get; set; }
+        DbSet<BookAuthors> BookAuthors { get; set; }
+        DbSet<Librarian> Librarians { get; set; }
+        List<User> Users { get; }
 
-        int SaveChanges();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

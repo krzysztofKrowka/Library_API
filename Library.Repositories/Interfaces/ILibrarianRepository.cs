@@ -9,9 +9,9 @@ namespace Library.Repositories.Interfaces
 {
     public interface ILibrarianRepository
     {
-        Librarian ListLibrarian(Guid librarianID);
-        IEnumerable<Librarian> ListLibrarians();
-        Librarian CreateLibrarian(Librarian librarian);
-        bool DeleteLibrarian(Guid librarianID);
+        Task<Librarian> ListLibrarian(Guid librarianID);
+        Task<IEnumerable<Librarian>> ListLibrarians();
+        Task<Librarian> CreateLibrarian(Librarian librarian);
+        Task<bool> DeleteLibrarian(Guid librarianID);
     }
 }

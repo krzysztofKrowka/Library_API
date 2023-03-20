@@ -18,17 +18,17 @@ namespace Library.Repositories.Repositories
         {
             _context = bookContext;
         }
-        public bool AuthorExists(Guid id)
+        public async Task<bool> AuthorExists(Guid id)
         {
-            return (_context.Authors?.Any(e => e.AuthorID == id)).GetValueOrDefault();
+            return (await _context.Authors?.AnyAsync(e => e.AuthorID == id));
         }
 
-        public Author CreateAuthor(Author authorToCreate)
+        public async Task<Author> CreateAuthor(Author authorToCreate)
         {
             try
             {
-                _context.Authors.Add(authorToCreate);
-                _context.SaveChanges();
+                await _context.Authors.AddAsync(authorToCreate);
+                await _context.SaveChangesAsync();
                 return authorToCreate;
             }
             catch
@@ -37,19 +37,19 @@ namespace Library.Repositories.Repositories
             }
         }
 
-        public bool DeleteAuthor(Guid id)
+        public async Task<bool> DeleteAuthor(Guid id)
         {
             if (_context.Authors == null)
             {
                 return false;
             }
-            var author = _context.Authors.Where(b => b.AuthorID == id).Single();
+            var author =await _context.Authors.Where(b => b.AuthorID == id).SingleAsync();
             if (author == null)
             {
                 return false;
             }
-            var books = _context.Books.Where(b => b.AuthorFirstName == author.FirstName && b.AuthorLastName == author.LastName).ToList();
-            var bookAuthors = _context.BookAuthors.Where(b => b.Author_ID == id).ToList();
+            var books =await _context.Books.Where(b => b.AuthorFirstName == author.FirstName && b.AuthorLastName == author.LastName).ToListAsync();
+            var bookAuthors =await _context.BookAuthors.Where(b => b.Author_ID == id).ToListAsync();
             if (books != null)
             {
                 foreach (var book in books)
@@ -62,44 +62,48 @@ namespace Library.Repositories.Repositories
                 }
             }
             _context.Authors.Remove(author);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public Author ListAuthor(Guid id)
+        public async Task<Author> ListAuthor(Guid id)
         {
-            return _context.Authors.Where(b => b.AuthorID == id).Single();
+            return await _context.Authors.Where(b => b.AuthorID == id).SingleAsync();
         }
 
-        public Author ListAuthorOfBook(string title)
+        public async Task<Author> ListAuthorOfBook(string title)
         {
-            var firstName = _context.Books.Where(b =>b.Title==title).Single().AuthorFirstName;
-            var lastName = _context.Books.Where(b => b.Title == title).Single().AuthorLastName;
-            var author = _context.Authors.Where(a => a.FirstName ==firstName && a.LastName == lastName).Single();
+            var book = await _context.Books.Where(a => a.Title == title).SingleAsync();
+            var firstName = book.AuthorFirstName;
+            var lastName = book.AuthorLastName;
+            var author =await _context.Authors.Where(a => 
+                a.FirstName == firstName && 
+                a.LastName == lastName).SingleAsync();
+            
             return author;
         }
-        public IEnumerable<Author> ListAuthors()
+        public async Task<IEnumerable<Author>> ListAuthors()
         {
-            return _context.Authors.Select(x => x).ToList();
+            return await _context.Authors.ToListAsync();
         }
 
-        public bool PutAuthor(Guid id, Author author)
+        public async Task<bool> PutAuthor(Guid id, Author author)
         {
             if (id != author.AuthorID)
             {
                 return false;
             }
-            var authorToPut = _context.Authors.Where(b => b.AuthorID == id).Single();
+            var authorToPut =await _context.Authors.Where(b => b.AuthorID == id).SingleAsync();
             authorToPut.FirstName = author.FirstName;
             authorToPut.LastName = author.LastName;
             authorToPut.BirthDate = author.BirthDate;
             try
             {
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_context.Authors.Where(b => b.AuthorID == id).Single() == null)
+                if (await _context.Authors.Where(b => b.AuthorID == id).SingleAsync() == null)
                 {
                     return false;
                 }

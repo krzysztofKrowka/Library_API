@@ -24,27 +24,27 @@ namespace Library.API.Controllers
 
         // GET: api/Books
         [HttpGet]
-        public ActionResult<IEnumerable<BookDTO>> GetBooks()
+        public async Task<ActionResult<IEnumerable<BookDTO>>> GetBooks()
         {
-            if (_service.ListBooks() == null)
+            if (await _service.ListBooks() == null)
             {
                 return NotFound();
             }
 
-            return Ok(_service.ListBooks());
+            return Ok(await _service.ListBooks());
 
         }
 
 
         [HttpGet("ByAuthor/")]
-        public ActionResult<IEnumerable<BookDTO>> GetBooksByAuthor(string FirstName, string LastName)
+        public async Task<ActionResult<IEnumerable<BookDTO>>> GetBooksByAuthor(string FirstName, string LastName)
         {
-            if (_service.ListBooks() == null)
+            if (await _service.ListBooks() == null)
             {
                 return NotFound();
             }
 
-            return Ok(_service.ListBooksByAuthor(FirstName, LastName));
+            return Ok(await _service.ListBooksByAuthor(FirstName, LastName));
         }
 
 
@@ -52,11 +52,11 @@ namespace Library.API.Controllers
         [HttpGet("{title}")]
         public async Task<ActionResult<BookDTO>> GetBook(string title)
         {
-            if (_service.ListBook(title) == null)
+            if (await _service.ListBook(title) == null)
             {
                 return NotFound();
             }
-            var book = _service.ListBook(title);
+            var book = await _service.ListBook(title);
 
             if (book == null)
             {
@@ -73,7 +73,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> PutBook(string title, BookDTO bookDTO)
         {
-            var put = _service.PutBook(title, bookDTO);
+            var put = await _service.PutBook(title, bookDTO);
             if (put)
                 return NoContent();
             else
@@ -87,7 +87,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<ActionResult<Book>> PostBook(BookDTO bookDTO)
         {
-            var book = _service.CreateBook(bookDTO);
+            var book = await _service.CreateBook(bookDTO);
             if (book == null)
                 return BadRequest("Error");
             else
@@ -99,7 +99,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant,Reader")]
         public async Task<IActionResult> BorrowBook(string title)
         {
-            var put = _service.PatchBorrowed(title, true);
+            var put = await _service.PatchBorrowed(title, true);
             if (put)
                 return NoContent();
             else
@@ -111,7 +111,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant,Reader")]
         public async Task<IActionResult> ReturnBook(string title)
         {
-            var put = _service.PatchBorrowed(title, false);
+            var put = await _service.PatchBorrowed(title, false);
             if (put)
                 return NoContent();
             else
@@ -123,7 +123,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> PatchBook(string title, string description)
         {
-            var put = _service.PatchDescription(title, description);
+            var put = await _service.PatchDescription(title, description);
             if (put)
                 return NoContent();
             else
@@ -136,7 +136,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> DeleteBook(string title)
         {
-            var delete = _service.DeleteBook(title);
+            var delete = await _service.DeleteBook(title);
             if (delete)
                 return NoContent();
             else

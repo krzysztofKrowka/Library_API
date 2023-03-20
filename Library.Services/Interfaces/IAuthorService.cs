@@ -9,13 +9,13 @@ namespace Library.Services.Interfaces
 {
     public interface IAuthorService
     {
-        public bool PutAuthor(Guid id, AuthorDTO author);
-        public bool DeleteAuthor(Guid id);
-        public Author ListAuthor(Guid id);
-        Author CreateAuthor(AuthorDTO authorToCreate);
-        IEnumerable<Author> ListAuthors();
-        public bool AuthorExists(Guid id);
-        public AuthorDTO ListAuthorOfBook(string title);
+        Task<bool> PutAuthor(Guid id, AuthorDTO author);
+        Task<bool> DeleteAuthor(Guid id);
+        Task<Author> ListAuthor(Guid id);
+        Task<Author> CreateAuthor(AuthorDTO authorToCreate);
+        Task<IEnumerable<Author>> ListAuthors();
+        Task<bool> AuthorExists(Guid id);
+        Task<AuthorDTO> ListAuthorOfBook(string title);
 
     }
 }

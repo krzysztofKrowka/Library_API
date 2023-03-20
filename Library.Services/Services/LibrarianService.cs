@@ -31,7 +31,7 @@ namespace Library.Services.Services
                 validation = false;
             return validation;
         }
-        public Librarian CreateLibrarian(LibrarianDTO librarianDTO)
+        public async Task<Librarian> CreateLibrarian(LibrarianDTO librarianDTO)
         {
             if (!ValidateLibrarian(librarianDTO))
                 return null;
@@ -42,22 +42,22 @@ namespace Library.Services.Services
                 LastName = librarianDTO.LastName,
             };
 
-            return _repository.CreateLibrarian(librarian);
+            return await _repository.CreateLibrarian(librarian);
         }
 
-        public bool DeleteLibrarian(Guid librarianID)
+        public async Task<bool> DeleteLibrarian(Guid librarianID)
         {
-            return _repository.DeleteLibrarian(librarianID);
+            return await _repository.DeleteLibrarian(librarianID);
         }
 
-        public Librarian ListLibrarian(Guid librarianID)
+        public async Task<Librarian> ListLibrarian(Guid librarianID)
         {
-            return _repository.ListLibrarian(librarianID);
+            return await _repository.ListLibrarian(librarianID);
         }
 
-        public IEnumerable<Librarian> ListLibrarians()
+        public async Task<IEnumerable<Librarian>> ListLibrarians()
         {
-            return _repository.ListLibrarians();
+            return await _repository.ListLibrarians();
         }
     }
 }
