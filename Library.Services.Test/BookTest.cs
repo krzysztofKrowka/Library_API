@@ -5,12 +5,12 @@ using Library.Services.Interfaces;
 using Library.Repositories.Models;
 using Library.Services.Models;
 using Library.API.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Services.Test
 {
     public class BookTest
     {
-        private LibraryContext _context = new LibraryContext();
         private readonly Mock<IBookService> bookService;
         public BookTest() 
         { 
@@ -18,29 +18,31 @@ namespace Library.Services.Test
         }
 
         [Fact]
-        public void GetBookList_BookList()
+        public async void GetBookList_BookList()
         {
             //arrange
             var bookList = GetBooksData();
-            bookService.Setup(x => x.ListBooks())
-                .Returns(bookList);
-            var booksController = new BooksController(_context);
+            bookService.Setup(x => x.ListBooks()).Returns(bookList);
+            var booksController = new BooksController(bookService.Object);
 
             //act
-            var booksResult = booksController.GetBooks();
-            IEnumerable<BookDTO> books = booksResult.Value;
+            var booksResult = await booksController.GetBooks();
+            var b = (booksResult.Result as OkObjectResult).Value as IEnumerable<BookDTO>;
+            //        ERROR
+            //  books.Value is 'null'
+            
             //assert
-            Assert.NotNull(books);
-            Assert.Equal(GetBooksData().Count(), books.Count());
-            Assert.Equal(GetBooksData().ToString(), books.ToString());
-            Assert.True(bookList.Equals(books));
+            Assert.NotNull(b);
+            Assert.Equal(GetBooksData().Result.Count(), b.Count());// This is true
+            Assert.Equal(GetBooksData().ToString(), b.ToString()); // These are not
+            Assert.True(bookList.Equals(b));//                        These are not
         }
 
 
 
-        private List<BookDTO> GetBooksData()
+        private async Task<IEnumerable<BookDTO>> GetBooksData()
         {
-            List<BookDTO> booksData = new List<BookDTO>
+            IEnumerable<BookDTO> booksData = new List<BookDTO>
         {
             new BookDTO
             {

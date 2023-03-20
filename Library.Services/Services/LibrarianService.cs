@@ -14,7 +14,7 @@ namespace Library.Services.Services
 {
     public class LibrarianService : ILibrarianService
     {
-        ILibrarianRepository _repository;
+        readonly ILibrarianRepository _repository;
         public LibrarianService(ILibrarianRepository repository)
         {
             _repository = repository;

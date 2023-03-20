@@ -11,7 +11,7 @@ namespace Library.Repositories.Repositories
 {
     public class LibrarianRepository : ILibrarianRepository
     {
-        ILibraryContext _context;
+        readonly ILibraryContext _context;
         public LibrarianRepository(ILibraryContext context)
         {
             _context = context;
