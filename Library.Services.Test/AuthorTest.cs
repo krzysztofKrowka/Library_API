@@ -56,8 +56,9 @@ namespace Library.Services.Test
             Assert.True(authorFromMethod.Equals(authorFromController));                // This is true
         }
 
-        //I don't know why this does not know
-        /*[Fact]
+        //I don't know why this does not work
+        //It's the exact same as the one in LibrarianTest
+        [Fact]
         public async void AddAuthor()
         {
             //arrange
@@ -83,7 +84,7 @@ namespace Library.Services.Test
             Assert.Equal(authorsFromMethod.ElementAt(2).AuthorID, authorFromController.AuthorID);
             Assert.True(authorsFromMethod.ElementAt(2).AuthorID == authorFromController.AuthorID);
         }
-        */
+        
         private async Task<IEnumerable<Author>> GetAuthorsData()
         {
             IEnumerable<Author> authorsData = new List<Author>
