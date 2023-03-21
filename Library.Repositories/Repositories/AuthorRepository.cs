@@ -27,7 +27,7 @@ namespace Library.Repositories.Repositories
         {
             try
             {
-                await _context.Authors.AddAsync(authorToCreate);
+                _context.Authors.Add(authorToCreate);
                 await _context.SaveChangesAsync();
                 return authorToCreate;
             }

@@ -25,22 +25,22 @@ namespace Library.Repositories.Repositories
         {
             var currentUser = _context.Users.FirstOrDefault(x => x.Username.ToLower() ==
                 userLogin.Username.ToLower() && x.Password == userLogin.Password);
-            if (currentUser != null)
-            {
-                return currentUser;
-            }
-            return null;
+            
+            return currentUser;
         }
 
         private string GenerateToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier,user.Username),
                 new Claim(ClaimTypes.Role,user.Role)
             };
+            
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
@@ -54,6 +54,7 @@ namespace Library.Repositories.Repositories
         public string Login(User userLogin)
         {
             var user = Authenticate(userLogin);
+            
             if (user != null)
             {
                 var token = GenerateToken(user);

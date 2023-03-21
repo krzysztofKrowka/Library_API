@@ -1,12 +1,8 @@
-using Library.Services;
 using Moq;
-using Library.Services.Services;
 using Library.Services.Interfaces;
-using Library.Repositories.Models;
 using Library.Services.Models;
 using Library.API.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Operations;
 
 namespace Library.Services.Test
 {
@@ -26,7 +22,6 @@ namespace Library.Services.Test
             bookService.Setup(x => x.ListBooks()).Returns(bookList);
             var booksController = new BooksController(bookService.Object);            
             var booksFromMethod = bookList.Result;
-
 
             //act
             var booksResult = await booksController.GetBooks();
@@ -78,12 +73,14 @@ namespace Library.Services.Test
         }
 
         [Fact]
-        public async void AddBook_Book()
+        public async void AddBook()
         {
             //arrange
             var bookList = GetBooksData();
             var booksFromMethod = bookList.Result;
-            bookService.Setup(x => x.CreateBook(booksFromMethod.ElementAt(2))).Returns(Task.FromResult(booksFromMethod.ElementAt(2)));
+
+            bookService.Setup(x => x.CreateBook(booksFromMethod.ElementAt(2))).
+                Returns(Task.FromResult(booksFromMethod.ElementAt(2)));
             var booksController = new BooksController(bookService.Object);
 
             //act
@@ -91,7 +88,7 @@ namespace Library.Services.Test
             var bookFromController = (bookResult.Result as CreatedResult).Value as BookDTO;
 
             //assert
-            Assert.NotNull(bookResult);
+            Assert.NotNull(bookFromController);
             Assert.Equal(booksFromMethod.ElementAt(2).Title, bookFromController.Title);
             Assert.True(booksFromMethod.ElementAt(2).Title == bookFromController.Title);
         }
