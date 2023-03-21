@@ -85,7 +85,7 @@ namespace Library.API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "Librarian,Assistant")]
-        public async Task<ActionResult<Book>> PostBook(BookDTO bookDTO)
+        public async Task<ActionResult<BookDTO>> PostBook(BookDTO bookDTO)
         {
             var book = await _service.CreateBook(bookDTO);
             if (book == null)

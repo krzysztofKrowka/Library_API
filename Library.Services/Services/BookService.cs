@@ -81,7 +81,7 @@ namespace Library.Services.Services
         {
             return BookToDTO(await _repository.ListBook(title));
         }
-        public async Task<Book> CreateBook(BookDTO bookDTO)
+        public async Task<BookDTO> CreateBook(BookDTO bookDTO)
         {
             var book = new Book
             {
@@ -106,7 +106,7 @@ namespace Library.Services.Services
             {
                 return null;
             }
-            return book;
+            return bookDTO;
 
         }
         public static BookDTO BookToDTO(Book book)

@@ -11,7 +11,7 @@ namespace Library.Services.Interfaces
         Task<bool> PutBook(string title, BookDTO bookDTO);
         Task<bool> DeleteBook(string title);
         Task<BookDTO> ListBook(string title);
-        Task<Book> CreateBook(BookDTO productToCreate);
+        Task<BookDTO> CreateBook(BookDTO productToCreate);
         Task<IEnumerable<BookDTO>> ListBooks();
     }
 }
