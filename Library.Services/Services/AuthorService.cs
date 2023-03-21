@@ -42,6 +42,7 @@ namespace Library.Services.Services
                 return null;
             var author = new Author
             {
+                AuthorID = Guid.NewGuid(),
                 FirstName = authorToCreate.FirstName,
                 LastName = authorToCreate.LastName,
                 BirthDate = authorToCreate.BirthDate
