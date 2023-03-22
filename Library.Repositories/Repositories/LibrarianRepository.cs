@@ -32,7 +32,7 @@ namespace Library.Repositories.Repositories
 
         public async Task<bool> DeleteLibrarian(Guid librarianID)
         {
-            var librarian =await _context.Librarians.Where(b => b.LibrarianID == librarianID).SingleAsync();
+            var librarian =await _context.Librarians.Where(b => b.LibrarianID == librarianID).FirstAsync();
             try
             {
                 _context.Librarians.Remove(librarian);
@@ -47,7 +47,7 @@ namespace Library.Repositories.Repositories
 
         public async Task<Librarian> ListLibrarian(Guid librarianID)
         {
-            return await _context.Librarians.Where(b => b.LibrarianID == librarianID).SingleAsync();
+            return await _context.Librarians.Where(b => b.LibrarianID == librarianID).FirstAsync();
         }
 
         public async Task<IEnumerable<Librarian>> ListLibrarians()

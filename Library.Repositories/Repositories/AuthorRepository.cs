@@ -25,16 +25,10 @@ namespace Library.Repositories.Repositories
 
         public async Task<Author> CreateAuthor(Author authorToCreate)
         {
-            try
-            {
+                      
                 _context.Authors.Add(authorToCreate);
                 await _context.SaveChangesAsync();
                 return authorToCreate;
-            }
-            catch
-            {
-                return null;
-            }
         }
 
         public async Task<bool> DeleteAuthor(Guid id)
@@ -43,42 +37,49 @@ namespace Library.Repositories.Repositories
             {
                 return false;
             }
-            var author =await _context.Authors.Where(b => b.AuthorID == id).SingleAsync();
+            
+            var author =await _context.Authors.Where(b => b.AuthorID == id).FirstAsync();
+            
             if (author == null)
             {
                 return false;
             }
+            
             var books =await _context.Books.Where(b => b.AuthorFirstName == author.FirstName && b.AuthorLastName == author.LastName).ToListAsync();
             var bookAuthors =await _context.BookAuthors.Where(b => b.Author_ID == id).ToListAsync();
+            
             if (books != null)
             {
                 foreach (var book in books)
                 {
                     _context.Books.Remove(book);
                 }
+                
                 foreach(var book in bookAuthors)
                 {
                     _context.BookAuthors.Remove(book);
                 }
             }
+            
             _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
+            
             return true;
         }
 
         public async Task<Author> ListAuthor(Guid id)
         {
-            return await _context.Authors.Where(b => b.AuthorID == id).SingleAsync();
+            return await _context.Authors.Where(b => b.AuthorID == id).FirstAsync();
         }
 
         public async Task<Author> ListAuthorOfBook(string title)
         {
-            var book = await _context.Books.Where(a => a.Title == title).SingleAsync();
+            var book = await _context.Books.Where(a => a.Title == title).FirstAsync();
             var firstName = book.AuthorFirstName;
             var lastName = book.AuthorLastName;
             var author =await _context.Authors.Where(a => 
                 a.FirstName == firstName && 
-                a.LastName == lastName).SingleAsync();
+                a.LastName == lastName).FirstAsync();
             
             return author;
         }
@@ -93,7 +94,7 @@ namespace Library.Repositories.Repositories
             {
                 return false;
             }
-            var authorToPut =await _context.Authors.Where(b => b.AuthorID == id).SingleAsync();
+            var authorToPut =await _context.Authors.Where(b => b.AuthorID == id).FirstAsync();
             authorToPut.FirstName = author.FirstName;
             authorToPut.LastName = author.LastName;
             authorToPut.BirthDate = author.BirthDate;
@@ -103,7 +104,7 @@ namespace Library.Repositories.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (await _context.Authors.Where(b => b.AuthorID == id).SingleAsync() == null)
+                if (await _context.Authors.Where(b => b.AuthorID == id).FirstAsync() == null)
                 {
                     return false;
                 }

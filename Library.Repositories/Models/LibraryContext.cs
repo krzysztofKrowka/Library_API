@@ -5,11 +5,8 @@ namespace Library.Repositories.Models
 {
     public partial class LibraryContext : DbContext, ILibraryContext 
     { 
-       public LibraryContext() { 
-        }
-        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
-        {
-        }
+        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options) {  }
+        
         
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
@@ -21,10 +18,8 @@ namespace Library.Repositories.Models
             new User(){ Username="assistant",Password="assistant",Role="Assistant"},
             new User(){ Username="reader",Password="reader",Role="Reader"},
         };
-        /*public Task<int> SaveChangesAsync()
-        {
-            return null;
-        }*/
+
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=library;Trusted_Connection=True;TrustServerCertificate=True;",b => b.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null));

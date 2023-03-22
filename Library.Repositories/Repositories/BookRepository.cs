@@ -19,7 +19,7 @@ namespace Library.Repositories.Repositories
             foreach(var book in booksByAuthor) 
             { 
                 var id = book.Book_ID;
-                var correctBook = await _context.Books.Where(b => b.BookID == id).SingleAsync();
+                var correctBook = await _context.Books.Where(b => b.BookID == id).FirstAsync();
                 books.Add(correctBook);
             }
             return books;
@@ -30,7 +30,7 @@ namespace Library.Repositories.Repositories
         }
         public async Task<Book> ListBook(string title)
         {
-            return await _context.Books.Where(b => b.Title == title).SingleAsync();
+            return await _context.Books.Where(b => b.Title == title).FirstAsync();
         }
         public async Task<Book> CreateBook(Book book)
         {
@@ -39,7 +39,7 @@ namespace Library.Repositories.Repositories
                 var author = new BookAuthors();
                 author.ID = Guid.NewGuid();
                 author.Book_ID =book.BookID;
-                author.Author_ID = _context.Authors.Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName).Single().AuthorID;  
+                author.Author_ID = _context.Authors.Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName).First().AuthorID;  
                 _context.BookAuthors.Add(author);
                 _context.Books.Add(book);
                 await _context.SaveChangesAsync();
@@ -56,7 +56,7 @@ namespace Library.Repositories.Repositories
             {
                 return false;
             }
-            var book = await _context.Books.Where(b => b.Title == title).SingleAsync();
+            var book = await _context.Books.Where(b => b.Title == title).FirstAsync();
             book.Description = bookDTO.Description;
             book.AuthorFirstName = bookDTO.AuthorFirstName;
             book.AuthorLastName = bookDTO.AuthorLastName;
@@ -69,7 +69,7 @@ namespace Library.Repositories.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (await _context.Books.Where(b => b.Title == title).SingleAsync() == null)
+                if (await _context.Books.Where(b => b.Title == title).FirstAsync() == null)
                 {
                     return false;
                 }
@@ -83,7 +83,7 @@ namespace Library.Repositories.Repositories
         }
         public async Task<bool> PatchBorrowed(string title,bool isBorrwed)
         {
-            var book =await _context.Books.Where(b => b.Title == title).SingleAsync();
+            var book =await _context.Books.Where(b => b.Title == title).FirstAsync();
             book.IsBorrowed = isBorrwed;
             try
             {
@@ -91,7 +91,7 @@ namespace Library.Repositories.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (await _context.Books.Where(b => b.Title == title).SingleAsync() == null)
+                if (await _context.Books.Where(b => b.Title == title).FirstAsync() == null)
                 {
                     return false;
                 }
@@ -105,7 +105,7 @@ namespace Library.Repositories.Repositories
         }
         public async Task<bool> PatchDescription(string title, string description)
         {
-            var book =await _context.Books.Where(b => b.Title == title).SingleAsync();
+            var book =await _context.Books.Where(b => b.Title == title).FirstAsync();
             book.Description = description;
             try
             {
@@ -113,7 +113,7 @@ namespace Library.Repositories.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (await _context.Books.Where(b => b.Title == title).SingleAsync() == null)
+                if (await _context.Books.Where(b => b.Title == title).FirstAsync() == null)
                 {
                     return false;
                 }
