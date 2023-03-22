@@ -1,6 +1,8 @@
 ﻿using Library.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 using Library.Repositories.Interfaces;
+using Org.BouncyCastle.Asn1.X509;
+
 namespace Library.Repositories.Repositories
 {
     public class BookRepository : IBookRepository
@@ -36,13 +38,20 @@ namespace Library.Repositories.Repositories
         {
             try
             {
-                var author = new BookAuthors();
-                author.ID = Guid.NewGuid();
-                author.Book_ID =book.BookID;
-                author.Author_ID = _context.Authors.Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName).First().AuthorID;  
-                _context.BookAuthors.Add(author);
+                var bookAuthor = new BookAuthors();
+                bookAuthor.ID = Guid.NewGuid();
+                bookAuthor.Book_ID =book.BookID;
+                var author = _context.Authors.Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName).First();
+                
+                var authorID = author.AuthorID;
+                bookAuthor.Author_ID = authorID;
+                book.AuthorID = authorID;
+                author.Books.Add(book);
+                
+                _context.BookAuthors.Add(bookAuthor);
                 _context.Books.Add(book);
                 await _context.SaveChangesAsync();
+               
                 return book;
             }
             catch

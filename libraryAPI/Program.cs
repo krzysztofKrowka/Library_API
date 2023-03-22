@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<LibraryContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("LibraryDatabase"), b => b.MigrationsAssembly("libraryAPI")));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("LibraryDatabase"), b => b.MigrationsAssembly("Library.API")));
 
 builder.Services.AddMvc();
 

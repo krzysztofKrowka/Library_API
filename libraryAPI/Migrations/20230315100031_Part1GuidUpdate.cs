@@ -11,6 +11,8 @@ namespace Library.API.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(@"Delete From Books; Delete From BookAuthors; Delete From Authors;", true);
+
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Books",
                 table: "Books");
