@@ -73,7 +73,7 @@ namespace Library.Services.Services
                 return false;
             return await _repository.PatchDescription(title, description);
         }
-        public async Task<IEnumerable<BookDTO>> ListBooks()
+        public async Task<List<BookDTO>> ListBooks()
         {
             return BooksToDTO(await _repository.ListBooks());
         }
@@ -95,17 +95,13 @@ namespace Library.Services.Services
                 Description = bookDTO.Description,
             };
             // Validation logic
-
+            if (!ValidateBook(bookDTO))
+                return null;
 
             // Database logic
-            try
-            {
-                book =await _repository.CreateBook(book);
-            }
-            catch
-            {
-                return null;
-            }
+
+            await _repository.CreateBook(book);
+ 
             return bookDTO;
 
         }
@@ -122,7 +118,7 @@ namespace Library.Services.Services
                 IsBorrowed = book.IsBorrowed
             };
         }
-        public static IEnumerable<BookDTO> BooksToDTO(IEnumerable<Book> books)
+        public static List<BookDTO> BooksToDTO(IEnumerable<Book> books)
         {
             var result = new List<BookDTO>();
             foreach (var book in books)

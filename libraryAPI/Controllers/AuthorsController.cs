@@ -23,7 +23,7 @@ namespace Library.API.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Librarian,Assistant")]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthors()
         {
             if (await _service.ListAuthors() == null)
             {
@@ -48,7 +48,7 @@ namespace Library.API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Librarian,Assistant")]
-        public async Task<ActionResult<Author>> GetAuthor(Guid id)
+        public async Task<ActionResult<AuthorDTO>> GetAuthor(Guid id)
         {
             if (await _service.ListAuthor(id) == null)
             {
@@ -78,8 +78,15 @@ namespace Library.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Librarian,Assistant")]
-        public async Task<ActionResult<Author>> PostAuthor(AuthorDTO authorDTO)
+        public async Task<ActionResult<Author>> PostAuthor(string FirstName, string LastName, DateTime BirthDate)
         {
+            var authorDTO = new AuthorDTO
+            {
+                FirstName = FirstName,
+                LastName = LastName,
+                BirthDate = BirthDate
+            };
+
             var author = await _service.CreateAuthor(authorDTO);
             if (author == null)
                 return BadRequest("Error");

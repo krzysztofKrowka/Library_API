@@ -1,6 +1,7 @@
 ﻿using Library.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Mysqlx.Crud;
+using System.Reflection.Metadata;
 
 namespace Library.Repositories.Models
 {
@@ -33,7 +34,6 @@ namespace Library.Repositories.Models
             .WithMany(a => a.Books)
             .HasForeignKey(b => b.AuthorID)
             .OnDelete(DeleteBehavior.Cascade);
-
         }
     }
 }

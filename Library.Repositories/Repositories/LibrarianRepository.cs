@@ -18,31 +18,19 @@ namespace Library.Repositories.Repositories
         }
         public async Task<Librarian> CreateLibrarian(Librarian librarian)
         {
-            try
-            {
                 _context.Librarians.Add(librarian);
                 await _context.SaveChangesAsync();
                 return librarian;
-            }
-            catch
-            {
-                return null;
-            }
+            
         }
 
         public async Task<bool> DeleteLibrarian(Guid librarianID)
         {
             var librarian =await _context.Librarians.Where(b => b.LibrarianID == librarianID).FirstAsync();
-            try
-            {
-                _context.Librarians.Remove(librarian);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+                
+            _context.Librarians.Remove(librarian);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<Librarian> ListLibrarian(Guid librarianID)

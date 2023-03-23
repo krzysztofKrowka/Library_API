@@ -11,9 +11,9 @@ namespace Library.Services.Interfaces
     {
         Task<bool> PutAuthor(Guid id, AuthorDTO author);
         Task<bool> DeleteAuthor(Guid id);
-        Task<Author> ListAuthor(Guid id);
+        Task<AuthorDTO> ListAuthor(Guid id);
         Task<Author> CreateAuthor(AuthorDTO authorToCreate);
-        Task<IEnumerable<Author>> ListAuthors();
+        Task<IEnumerable<AuthorDTO>> ListAuthors();
         Task<bool> AuthorExists(Guid id);
         Task<AuthorDTO> ListAuthorOfBook(string title);
 

@@ -36,28 +36,25 @@ namespace Library.Repositories.Repositories
         }
         public async Task<Book> CreateBook(Book book)
         {
-            try
-            {
+
                 var bookAuthor = new BookAuthors();
-                bookAuthor.ID = Guid.NewGuid();
-                bookAuthor.Book_ID =book.BookID;
-                var author = _context.Authors.Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName).First();
                 
+                bookAuthor.ID = Guid.NewGuid();
+                bookAuthor.Book_ID = book.BookID;
+                
+                var author = _context.Authors.Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName).First();
                 var authorID = author.AuthorID;
+
                 bookAuthor.Author_ID = authorID;
                 book.AuthorID = authorID;
-                author.Books.Add(book);
                 
                 _context.BookAuthors.Add(bookAuthor);
                 _context.Books.Add(book);
                 await _context.SaveChangesAsync();
                
                 return book;
-            }
-            catch
-            {
-                return null;
-            }
+
+
         }
         public async Task<bool> PutBook(string title,Book bookDTO)
         {
@@ -72,21 +69,15 @@ namespace Library.Repositories.Repositories
             book.Category = bookDTO.Category;
             book.PublicationDate = bookDTO.PublicationDate;
             book.IsBorrowed = bookDTO.IsBorrowed;
-            try
+            
+            await _context.SaveChangesAsync();
+            
+            
+            if (await _context.Books.Where(b => b.Title == title).FirstAsync() == null)
             {
-                await _context.SaveChangesAsync();
+                return false;
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (await _context.Books.Where(b => b.Title == title).FirstAsync() == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            
 
             return true;
         }
@@ -94,20 +85,13 @@ namespace Library.Repositories.Repositories
         {
             var book =await _context.Books.Where(b => b.Title == title).FirstAsync();
             book.IsBorrowed = isBorrwed;
-            try
+            
+            await _context.SaveChangesAsync();
+            
+            
+            if (await _context.Books.Where(b => b.Title == title).FirstAsync() == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (await _context.Books.Where(b => b.Title == title).FirstAsync() == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    throw;
-                }
+                return false;
             }
 
             return true;
@@ -116,20 +100,12 @@ namespace Library.Repositories.Repositories
         {
             var book =await _context.Books.Where(b => b.Title == title).FirstAsync();
             book.Description = description;
-            try
+            await _context.SaveChangesAsync();
+
+
+            if (await _context.Books.Where(b => b.Title == title).FirstAsync() == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (await _context.Books.Where(b => b.Title == title).FirstAsync() == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    throw;
-                }
+                return false;
             }
 
             return true;

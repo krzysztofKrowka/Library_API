@@ -24,8 +24,7 @@ namespace Library.Repositories.Repositories
         }
 
         public async Task<Author> CreateAuthor(Author authorToCreate)
-        {
-                      
+        {      
                 _context.Authors.Add(authorToCreate);
                 await _context.SaveChangesAsync();
                 return authorToCreate;
@@ -83,6 +82,7 @@ namespace Library.Repositories.Repositories
             
             return author;
         }
+        
         public async Task<IEnumerable<Author>> ListAuthors()
         {
             return await _context.Authors.ToListAsync();
@@ -98,22 +98,22 @@ namespace Library.Repositories.Repositories
             authorToPut.FirstName = author.FirstName;
             authorToPut.LastName = author.LastName;
             authorToPut.BirthDate = author.BirthDate;
-            try
+
+            await _context.SaveChangesAsync();
+
+            if (await _context.Authors.Where(b => b.AuthorID == id).FirstAsync() == null)
             {
-                await _context.SaveChangesAsync();
+                return false;
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (await _context.Authors.Where(b => b.AuthorID == id).FirstAsync() == null)
-                {
-                    return false;
-                }
                 else
-                {
-                    throw;
-                }
-            }
+            
             return true;
+        }
+        
+        public async Task<List<Book>> ListBooksByAuthor(Guid id)
+        {
+            return await _context.Books.Where(x => x.AuthorID == id).ToListAsync();
         }
     }
 }
+

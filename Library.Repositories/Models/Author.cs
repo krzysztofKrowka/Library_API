@@ -11,14 +11,13 @@ namespace Library.Repositories.Models
 {
     public class Author
     {
-        public Author()
-        {
-            this.Books = new HashSet<Book>();
-        }
+
         public Guid AuthorID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public ICollection<Book> Books { get; set; }
+        
+        public virtual ICollection<Book> Books { get; set; }
+        
     }
 }

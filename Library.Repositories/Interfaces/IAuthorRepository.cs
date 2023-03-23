@@ -16,5 +16,6 @@ namespace Library.Repositories.Interfaces
         Task<Author> CreateAuthor(Author authorToCreate);
         Task<IEnumerable<Author>> ListAuthors();
         Task<bool> AuthorExists(Guid id);
+        Task<List<Book>> ListBooksByAuthor(Guid id);
     }
 }
