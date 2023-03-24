@@ -37,7 +37,7 @@ namespace Library.Services.Services
             return await _repository.AuthorExists(id);
         }
 
-        public async Task<Author> CreateAuthor(AuthorDTO authorToCreate)
+        public async Task<AuthorDTO> CreateAuthor(AuthorDTO authorToCreate)
         {
             if (!ValidateAuthor(authorToCreate))
                 return null;
@@ -53,7 +53,7 @@ namespace Library.Services.Services
                 IsDeleted = false
             };
 
-            return await _repository.CreateAuthor(author);
+            return AuthorToDTO(await _repository.CreateAuthor(author));
         }
 
         public async Task<bool> DeleteAuthor(Guid id)

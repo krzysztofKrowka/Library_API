@@ -78,7 +78,7 @@ namespace Library.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Librarian,Assistant")]
-        public async Task<ActionResult<Author>> PostAuthor(string FirstName, string LastName, DateTime BirthDate)
+        public async Task<ActionResult<AuthorDTO>> PostAuthor(string FirstName, string LastName, DateTime BirthDate)
         {
             var authorDTO = new AuthorDTO
             {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Services.Test
 {
-   /* public class BookTest
+    public class BookTest
     {
         private readonly Mock<IBookService> bookService;
         public BookTest() 
@@ -92,9 +92,9 @@ namespace Library.Services.Test
             Assert.Equal(booksFromMethod.ElementAt(2).Title, bookFromController.Title);
             Assert.True(booksFromMethod.ElementAt(2).Title == bookFromController.Title);
         }
-        private async Task<IEnumerable<BookDTO>> GetBooksData()
+        private async Task<List<BookDTO>> GetBooksData()
         {
-            IEnumerable<BookDTO> booksData = new List<BookDTO>
+            List<BookDTO> booksData = new List<BookDTO>
         {
             new BookDTO
             {
@@ -139,5 +139,5 @@ namespace Library.Services.Test
             };
             return bookData;
         }
-    }*/
+    }
 }

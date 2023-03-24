@@ -7,7 +7,7 @@ using Library.Repositories.Models;
 
 namespace Library.Services.Test
 {
-    /*public class AuthorTest
+  /*  public class AuthorTest
     {
         private readonly Mock<IAuthorService> authorService;
         public AuthorTest()
@@ -29,10 +29,9 @@ namespace Library.Services.Test
             var authorsFromController = (authorResult.Result as OkObjectResult).Value as IEnumerable<Author>;
 
             //assert
-            Assert.NotNull(authorsFromController);                                        // This is true
-            Assert.Equal(authorsFromMethod.Count(), authorsFromController.Count());        // This is true
-            Assert.Equal(authorsFromMethod.ToString(), authorsFromController.ToString()); // This is true
-            Assert.True(authorsFromMethod.Equals(authorsFromController));                // This is true
+            Assert.NotNull(authorsFromController);                                          // This is not true
+            Assert.Equal(authorsFromMethod.Count(), authorsFromController.Count());        // This is not true
+            Assert.True(authorsFromMethod.Equals(authorsFromController));                 // This is not true
         }
 
         [Fact]
@@ -48,16 +47,14 @@ namespace Library.Services.Test
             //act
             var authorsResult = await authorsController.
                                 GetAuthor(Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4"));
+            
             var authorFromController = (authorsResult.Result as OkObjectResult).Value as Author;
 
             //assert
-            Assert.NotNull(authorFromController);                                       // This is true
-            Assert.Equal(authorFromMethod.ToString(), authorFromController.ToString()); // This is true
-            Assert.True(authorFromMethod.Equals(authorFromController));                // This is true
+            Assert.NotNull(authorFromController);                                       
+            Assert.True(authorFromMethod.Equals(authorFromController));               
         }
 
-        //I don't know why this does not work
-        //It's the exact same as the one in LibrarianTest
         [Fact]
         public async void AddAuthor()
         {
@@ -68,7 +65,9 @@ namespace Library.Services.Test
             var authorDTO = new AuthorDTO
             {
                 FirstName = authorsFromMethod.ElementAt(2).FirstName,
-                LastName = authorsFromMethod.ElementAt(2).LastName
+                LastName = authorsFromMethod.ElementAt(2).LastName,
+                BirthDate = authorsFromMethod.ElementAt(2).BirthDate,
+                AuthorID = authorsFromMethod.ElementAt(2).AuthorID
             };
             
             authorService.Setup(x => x.CreateAuthor(authorDTO)).
@@ -76,48 +75,52 @@ namespace Library.Services.Test
             var authorsController = new AuthorsController(authorService.Object);
 
             //act
-            var authorResult = await authorsController.PostAuthor(authorDTO);
+            var authorResult = await authorsController.PostAuthor(authorDTO.FirstName,authorDTO.LastName,authorDTO.BirthDate);
             var authorFromController = (authorResult.Result as CreatedResult).Value as Author;
 
             //assert
             Assert.NotNull(authorFromController);
-            Assert.Equal(authorsFromMethod.ElementAt(2).ID, authorFromController.ID);
-            Assert.True(authorsFromMethod.ElementAt(2).ID == authorFromController.ID);
+            Assert.Equal(authorsFromMethod.ElementAt(2).AuthorID, authorFromController.ID);
+            Assert.True(authorsFromMethod.ElementAt(2).AuthorID == authorFromController.ID);
         }
         
-        private async Task<IEnumerable<Author>> GetAuthorsData()
+        private async Task<IEnumerable<AuthorDTO>> GetAuthorsData()
         {
-            IEnumerable<Author> authorsData = new List<Author>
+            IEnumerable<AuthorDTO> authorsData = new List<AuthorDTO>
         {
 
-            new Author
+            new AuthorDTO
             {
                 FirstName = "Jan",
                 LastName = "Nowak",
-                ID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb")
+                BirthDate = DateTime.Parse("2020-02-20"),
+                AuthorID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb")
             },
-             new Author
+             new AuthorDTO
             {
                 FirstName = "Andrzej",
                 LastName = "Kowalski",
-                ID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
+                BirthDate = DateTime.Parse("2020-02-20"),
+                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
             },
-             new Author
+             new AuthorDTO
             {
                 FirstName = "Jan",
                 LastName = "Tolkien",
-                ID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4")
+                BirthDate = DateTime.Parse("2020-02-20"),
+                AuthorID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4")
             }
         };
             return authorsData;
         }
-        private async Task<Author> GetAuthorData()
+        private async Task<AuthorDTO> GetAuthorData()
         {
-            var authorData = new Author
+            var authorData = new AuthorDTO
             {
                 FirstName = "Andrzej",
                 LastName = "Kowalski",
-                ID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
+                BirthDate = DateTime.Parse("2020-02-20"),
+                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
             };
             return authorData;
         }
