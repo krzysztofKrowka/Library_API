@@ -46,10 +46,11 @@ namespace Library.Services.Services
             
             var author = new Author
             {
-                AuthorID = authorToCreate.AuthorID,
+                ID = authorToCreate.AuthorID,
                 FirstName = authorToCreate.FirstName,
                 LastName = authorToCreate.LastName,
-                BirthDate = authorToCreate.BirthDate
+                BirthDate = authorToCreate.BirthDate,
+                IsDeleted = false
             };
 
             return await _repository.CreateAuthor(author);
@@ -93,11 +94,11 @@ namespace Library.Services.Services
             var author =await _repository.ListAuthorOfBook(title);
             var authorDTO = new AuthorDTO()
             {
-                AuthorID = author.AuthorID,
+                AuthorID = author.ID,
                 BirthDate = author.BirthDate,
                 FirstName = author.FirstName,
                 LastName = author.LastName,
-                Books = BookService.BooksToDTO(await _repository.ListBooksByAuthor(author.AuthorID))
+                Books = BookService.BooksToDTO(await _repository.ListBooksByAuthor(author.ID))
             };
             return authorDTO;
         }
@@ -106,7 +107,7 @@ namespace Library.Services.Services
         {
             return new AuthorDTO
             {
-                AuthorID = author.AuthorID,
+                AuthorID = author.ID,
                 FirstName = author.FirstName,
                 LastName = author.LastName,
                 BirthDate = author.BirthDate

@@ -12,7 +12,6 @@ namespace Library.Repositories.Interfaces
     {
         DbSet<Book> Books { get; set; }
         DbSet<Author> Authors { get; set; }
-        DbSet<BookAuthors> BookAuthors { get; set; }
         DbSet<Librarian> Librarians { get; set; }
         List<User> Users { get; }
 

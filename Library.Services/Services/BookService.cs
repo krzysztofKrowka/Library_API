@@ -85,7 +85,7 @@ namespace Library.Services.Services
         {
             var book = new Book
             {
-                BookID = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 AuthorFirstName = bookDTO.AuthorFirstName,
                 AuthorLastName = bookDTO.AuthorLastName,
                 Title = bookDTO.Title,
@@ -93,6 +93,7 @@ namespace Library.Services.Services
                 Category = bookDTO.Category,
                 PublicationDate = bookDTO.PublicationDate,
                 Description = bookDTO.Description,
+                IsDeleted = false
             };
             // Validation logic
             if (!ValidateBook(bookDTO))

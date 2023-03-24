@@ -80,8 +80,8 @@ namespace Library.Services.Test
 
             //assert
             Assert.NotNull(librarianFromController);
-            Assert.Equal(librariansFromMethod.ElementAt(2).LibrarianID, librarianFromController.LibrarianID);
-            Assert.True(librariansFromMethod.ElementAt(2).LibrarianID == librarianFromController.LibrarianID);
+            Assert.Equal(librariansFromMethod.ElementAt(2).ID, librarianFromController.ID);
+            Assert.True(librariansFromMethod.ElementAt(2).ID == librarianFromController.ID);
         }
 
         private async Task<IEnumerable<Librarian>> GetLibrariansData()
@@ -93,19 +93,19 @@ namespace Library.Services.Test
             {
                 FirstName = "Jan",
                 LastName = "Nowak",
-                LibrarianID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb")
+                ID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb")
             },
              new Librarian
             {
                 FirstName = "Andrzej",
                 LastName = "Kowalski",
-                LibrarianID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
+                ID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
             },
              new Librarian
             {
                 FirstName = "Jan",
                 LastName = "Tolkien",
-                LibrarianID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4")
+                ID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4")
             }
         };
             return librarianData;
@@ -116,7 +116,7 @@ namespace Library.Services.Test
             {
                 FirstName = "Andrzej",
                 LastName = "Kowalski",
-                LibrarianID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
+                ID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
             };
             return librarianData;
         }

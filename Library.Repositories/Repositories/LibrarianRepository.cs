@@ -26,21 +26,21 @@ namespace Library.Repositories.Repositories
 
         public async Task<bool> DeleteLibrarian(Guid librarianID)
         {
-            var librarian =await _context.Librarians.Where(b => b.LibrarianID == librarianID).FirstAsync();
+            var librarian =await _context.Librarians.Where(b => b.ID == librarianID).FirstAsync();
                 
-            _context.Librarians.Remove(librarian);
+            librarian.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<Librarian> ListLibrarian(Guid librarianID)
         {
-            return await _context.Librarians.Where(b => b.LibrarianID == librarianID).FirstAsync();
+            return await _context.Librarians.Where(b => b.ID == librarianID && !b.IsDeleted).FirstAsync();
         }
 
         public async Task<IEnumerable<Librarian>> ListLibrarians()
         {
-            return await _context.Librarians.ToListAsync();
+            return await _context.Librarians.Where(x => !x.IsDeleted).ToListAsync();
         }
     }
 }

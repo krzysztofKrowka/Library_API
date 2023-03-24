@@ -11,7 +11,6 @@ namespace Library.Repositories.Models
         
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
-        public DbSet<BookAuthors> BookAuthors { get; set; }
         public DbSet<Librarian> Librarians { get; set; }
         public List<User> Users { get; } = new()
         {
@@ -32,8 +31,7 @@ namespace Library.Repositories.Models
             modelBuilder.Entity<Book>()
             .HasOne(b => b.Author)
             .WithMany(a => a.Books)
-            .HasForeignKey(b => b.AuthorID)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(b => b.AuthorID);
         }
     }
 }

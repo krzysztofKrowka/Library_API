@@ -37,9 +37,10 @@ namespace Library.Services.Services
                 return null;
             var librarian = new Librarian
             {
-                LibrarianID = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 FirstName = librarianDTO.FirstName,
                 LastName = librarianDTO.LastName,
+                IsDeleted = false
             };
 
             return await _repository.CreateLibrarian(librarian);

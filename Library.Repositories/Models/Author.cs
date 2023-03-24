@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace Library.Repositories.Models
 {
-    public class Author
+    public class Author : BaseEnitty
     {
 
-        public Guid AuthorID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }

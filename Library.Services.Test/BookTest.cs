@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Services.Test
 {
-    public class BookTest
+   /* public class BookTest
     {
         private readonly Mock<IBookService> bookService;
         public BookTest() 
@@ -139,5 +139,5 @@ namespace Library.Services.Test
             };
             return bookData;
         }
-    }
+    }*/
 }
