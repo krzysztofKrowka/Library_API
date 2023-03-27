@@ -80,7 +80,7 @@ namespace Library.Services.Test
 
             //act
             var authorResult =await authorsController.PostAuthor(authorDTO.FirstName,authorDTO.LastName,authorDTO.BirthDate);
-            var authorFromController = ((CreatedResult)authorResult.Result).Value as AuthorDTO;
+            var authorFromController = (authorResult.Result as CreatedResult).Value as AuthorDTO;
 
             //assert
             Assert.NotNull(authorFromController);

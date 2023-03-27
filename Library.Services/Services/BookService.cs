@@ -127,9 +127,9 @@ namespace Library.Services.Services
             return result;
         }
 
-        public async Task<IEnumerable<Book>> ListBooksByAuthor(string FirstName, string LastName)
+        public async Task<IEnumerable<BookDTO>> ListBooksByAuthor(string FirstName, string LastName)
         {
-            return await _repository.ListBooksByAuthor(FirstName, LastName);
+            return BooksToDTO(await _repository.ListBooksByAuthor(FirstName, LastName));
         }
     }
 }
