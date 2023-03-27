@@ -7,7 +7,7 @@ using Library.Repositories.Models;
 
 namespace Library.Services.Test
 {
-  /*  public class AuthorTest
+    public class AuthorTest
     {
         private readonly Mock<IAuthorService> authorService;
         public AuthorTest()
@@ -26,7 +26,7 @@ namespace Library.Services.Test
 
             //act
             var authorResult = await authorsController.GetAuthors();
-            var authorsFromController = (authorResult.Result as OkObjectResult).Value as IEnumerable<Author>;
+            var authorsFromController = (authorResult.Result as OkObjectResult).Value as IEnumerable<AuthorDTO>;
 
             //assert
             Assert.NotNull(authorsFromController);                                          // This is not true
@@ -48,7 +48,7 @@ namespace Library.Services.Test
             var authorsResult = await authorsController.
                                 GetAuthor(Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4"));
             
-            var authorFromController = (authorsResult.Result as OkObjectResult).Value as Author;
+            var authorFromController = (authorsResult.Result as OkObjectResult).Value as AuthorDTO;
 
             //assert
             Assert.NotNull(authorFromController);                                       
@@ -59,15 +59,13 @@ namespace Library.Services.Test
         public async void AddAuthor()
         {
             //arrange
-            var authorList = GetAuthorsData();
-            var authorsFromMethod = authorList.Result;
+            var authorsFromMethod =await GetAuthorsData();
             
             var authorDTO = new AuthorDTO
             {
                 FirstName = authorsFromMethod.ElementAt(2).FirstName,
                 LastName = authorsFromMethod.ElementAt(2).LastName,
-                BirthDate = authorsFromMethod.ElementAt(2).BirthDate,
-                AuthorID = authorsFromMethod.ElementAt(2).AuthorID
+                BirthDate = authorsFromMethod.ElementAt(2).BirthDate
             };
             
             authorService.Setup(x => x.CreateAuthor(authorDTO)).
@@ -76,12 +74,12 @@ namespace Library.Services.Test
 
             //act
             var authorResult = await authorsController.PostAuthor(authorDTO.FirstName,authorDTO.LastName,authorDTO.BirthDate);
-            var authorFromController = (authorResult.Result as CreatedResult).Value as Author;
+            var authorFromController = (authorResult.Result as CreatedResult).Value as AuthorDTO;
 
             //assert
             Assert.NotNull(authorFromController);
-            Assert.Equal(authorsFromMethod.ElementAt(2).AuthorID, authorFromController.ID);
-            Assert.True(authorsFromMethod.ElementAt(2).AuthorID == authorFromController.ID);
+            Assert.Equal(authorsFromMethod.ElementAt(2).FirstName, authorFromController.FirstName);
+            Assert.True(authorsFromMethod.ElementAt(2).FirstName == authorFromController.FirstName);
         }
         
         private async Task<IEnumerable<AuthorDTO>> GetAuthorsData()
@@ -94,21 +92,24 @@ namespace Library.Services.Test
                 FirstName = "Jan",
                 LastName = "Nowak",
                 BirthDate = DateTime.Parse("2020-02-20"),
-                AuthorID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb")
+                AuthorID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb"),
+                Books = new List<BookDTO>()
             },
              new AuthorDTO
             {
                 FirstName = "Andrzej",
                 LastName = "Kowalski",
                 BirthDate = DateTime.Parse("2020-02-20"),
-                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
+                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e"),
+                Books = new List<BookDTO>()
             },
              new AuthorDTO
             {
                 FirstName = "Jan",
                 LastName = "Tolkien",
                 BirthDate = DateTime.Parse("2020-02-20"),
-                AuthorID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4")
+                AuthorID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4"),
+                Books = new List<BookDTO>()
             }
         };
             return authorsData;
@@ -120,9 +121,10 @@ namespace Library.Services.Test
                 FirstName = "Andrzej",
                 LastName = "Kowalski",
                 BirthDate = DateTime.Parse("2020-02-20"),
-                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
+                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e"),
+                Books = new List<BookDTO>()
             };
             return authorData;
         }
-    }*/
+    }
 }

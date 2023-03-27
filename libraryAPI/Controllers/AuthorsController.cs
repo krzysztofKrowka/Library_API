@@ -86,7 +86,7 @@ namespace Library.API.Controllers
                 LastName = LastName,
                 BirthDate = BirthDate
             };
-
+            
             var author = await _service.CreateAuthor(authorDTO);
             if (author == null)
                 return BadRequest("Error");
