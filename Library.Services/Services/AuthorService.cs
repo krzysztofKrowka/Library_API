@@ -20,7 +20,7 @@ namespace Library.Services.Services
         {
             _repository = repository;
         }
-        protected bool ValidateAuthor(AuthorDTO author)
+        protected bool ValidateAuthor(Author author)
         {
             var validation = true;
             if (author.BirthDate.Year < 100 || author.BirthDate.Year > 2023)
@@ -37,21 +37,19 @@ namespace Library.Services.Services
             return await _repository.AuthorExists(id);
         }
 
-        public async Task<AuthorDTO> CreateAuthor(AuthorDTO authorToCreate)
+        public async Task<AuthorDTO> CreateAuthor(string firstName,string lastName,DateTime birthDate)
         {
-            if (!ValidateAuthor(authorToCreate))
-                return null;
-            
-            authorToCreate.AuthorID = Guid.NewGuid();
             
             var author = new Author
             {
-                ID = authorToCreate.AuthorID,
-                FirstName = authorToCreate.FirstName,
-                LastName = authorToCreate.LastName,
-                BirthDate = authorToCreate.BirthDate,
+                ID = Guid.NewGuid(),
+                FirstName = firstName,
+                LastName = lastName,
+                BirthDate = birthDate,
                 IsDeleted = false
             };
+            if (!ValidateAuthor(author))
+                return null;
 
             return AuthorToDTO(await _repository.CreateAuthor(author));
         }
@@ -78,14 +76,17 @@ namespace Library.Services.Services
 
         public async Task<bool> PutAuthor(Guid id, AuthorDTO authorToPut)
         {
-            if (!ValidateAuthor(authorToPut))
-                return false;
+           
             var author = new Author
             {
                 FirstName = authorToPut.FirstName,
                 LastName = authorToPut.LastName,
                 BirthDate = authorToPut.BirthDate
-            };
+            }; 
+            
+            if (!ValidateAuthor(author))
+                return false;
+            
             return await _repository.PutAuthor(id, author);
         }
 

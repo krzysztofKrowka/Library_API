@@ -33,6 +33,8 @@ namespace Library.API.Controllers
             return Ok(await _service.ListAuthors());
 
         }
+        
+        
         [HttpGet("OfBook/{title}")]
         [Authorize(Roles = "Librarian,Assistant,Reader")]
         public async Task<ActionResult<AuthorDTO>> GetAuthorOfBook(string title)
@@ -64,6 +66,7 @@ namespace Library.API.Controllers
             return Ok(author);
         }
 
+        
         [HttpPut("{id}")]
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> PutAuthor(Guid id, AuthorDTO author)
@@ -80,14 +83,9 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<ActionResult<AuthorDTO>> PostAuthor(string FirstName, string LastName, DateTime BirthDate)
         {
-            var authorDTO = new AuthorDTO
-            {
-                FirstName = FirstName,
-                LastName = LastName,
-                BirthDate = BirthDate
-            };
-            
-            var author = await _service.CreateAuthor(authorDTO);
+    
+            var author = await _service.CreateAuthor(FirstName,LastName,BirthDate);
+ 
             if (author == null)
                 return BadRequest("Error");
             else

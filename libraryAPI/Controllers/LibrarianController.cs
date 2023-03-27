@@ -32,6 +32,8 @@ namespace Library.API.Controllers
             return Ok(await _service.ListLibrarians());
 
         }
+        
+        
         [HttpGet("{id}")]
         [Authorize(Roles = "Librarian")]
         public async Task<ActionResult<Librarian>> GetLibrarian(Guid id)
@@ -49,6 +51,8 @@ namespace Library.API.Controllers
 
             return Ok(librarian);
         }
+        
+        
         [HttpPost]
         [Authorize(Roles = "Librarian")]
         public async Task<ActionResult<Librarian>> PostLibrarian(LibrarianDTO librarianDTO)
@@ -59,6 +63,8 @@ namespace Library.API.Controllers
             else
                 return Created(nameof(GetLibrarian), librarian);
         }
+        
+        
         [HttpDelete("{id}")]
         [Authorize(Roles = "Librarian")]
         public async Task<IActionResult> DeleteLibrarian(Guid id)

@@ -37,7 +37,7 @@ namespace Library.Services.Test
         }
 
         [Fact]
-        public async void GetLibrarianByTitle()
+        public async void GetLibrarianByID()
         {
             //arrange
             var librarian = GetLibrarianData();

@@ -12,7 +12,7 @@ namespace Library.Services.Interfaces
         Task<bool> PutAuthor(Guid id, AuthorDTO author);
         Task<bool> DeleteAuthor(Guid id);
         Task<AuthorDTO> ListAuthor(Guid id);
-        Task<AuthorDTO> CreateAuthor(AuthorDTO authorToCreate);
+        Task<AuthorDTO> CreateAuthor(string fName,string lName, DateTime bDate);
         Task<IEnumerable<AuthorDTO>> ListAuthors();
         Task<bool> AuthorExists(Guid id);
         Task<AuthorDTO> ListAuthorOfBook(string title);

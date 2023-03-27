@@ -29,13 +29,13 @@ namespace Library.Services.Test
             var authorsFromController = (authorResult.Result as OkObjectResult).Value as IEnumerable<AuthorDTO>;
 
             //assert
-            Assert.NotNull(authorsFromController);                                          // This is not true
-            Assert.Equal(authorsFromMethod.Count(), authorsFromController.Count());        // This is not true
-            Assert.True(authorsFromMethod.Equals(authorsFromController));                 // This is not true
+            Assert.NotNull(authorsFromController);                                          
+            Assert.Equal(authorsFromMethod.Count(), authorsFromController.Count());       
+            Assert.True(authorsFromMethod.Equals(authorsFromController));                 
         }
 
         [Fact]
-        public async void GetAuthorByTitle()
+        public async void GetAuthorByID()
         {
             //arrange
             var author = GetAuthorData();
@@ -58,28 +58,34 @@ namespace Library.Services.Test
         [Fact]
         public async void AddAuthor()
         {
+
+            //Error is propably becouse I give FName, LName, BDate to Post method, and in Post there is created new AuthorDTO, which is diffrent
+            // from authorDTO in this method, so there isn't given any response as it is not set
+
             //arrange
             var authorsFromMethod =await GetAuthorsData();
-            
+            var author = authorsFromMethod.ElementAt(0);
+
             var authorDTO = new AuthorDTO
             {
-                FirstName = authorsFromMethod.ElementAt(2).FirstName,
-                LastName = authorsFromMethod.ElementAt(2).LastName,
-                BirthDate = authorsFromMethod.ElementAt(2).BirthDate
+                FirstName = author.FirstName,
+                LastName = author.LastName,
+                BirthDate = author.BirthDate
             };
             
-            authorService.Setup(x => x.CreateAuthor(authorDTO)).
-                          Returns(Task.FromResult(authorsFromMethod.ElementAt(2)));
+            authorService.Setup(x => x.CreateAuthor(authorDTO.FirstName, authorDTO.LastName, authorDTO.BirthDate)).
+                          Returns(Task.FromResult(author));
+            
             var authorsController = new AuthorsController(authorService.Object);
 
             //act
-            var authorResult = await authorsController.PostAuthor(authorDTO.FirstName,authorDTO.LastName,authorDTO.BirthDate);
-            var authorFromController = (authorResult.Result as CreatedResult).Value as AuthorDTO;
+            var authorResult =await authorsController.PostAuthor(authorDTO.FirstName,authorDTO.LastName,authorDTO.BirthDate);
+            var authorFromController = ((CreatedResult)authorResult.Result).Value as AuthorDTO;
 
             //assert
             Assert.NotNull(authorFromController);
-            Assert.Equal(authorsFromMethod.ElementAt(2).FirstName, authorFromController.FirstName);
-            Assert.True(authorsFromMethod.ElementAt(2).FirstName == authorFromController.FirstName);
+            Assert.Equal(author.AuthorID, authorFromController.AuthorID);
+            Assert.True(author.AuthorID == authorFromController.AuthorID);
         }
         
         private async Task<IEnumerable<AuthorDTO>> GetAuthorsData()
