@@ -24,6 +24,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian")]
         public async Task<ActionResult<IEnumerable<Librarian>>> GetLibrarians()
         {
+            
             if (await _service.ListLibrarians() == null)
             {
                 return NotFound();
@@ -38,10 +39,12 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian")]
         public async Task<ActionResult<Librarian>> GetLibrarian(Guid id)
         {
+            
             if (await _service.ListLibrarian(id) == null)
             {
                 return NotFound();
             }
+            
             var librarian =await _service.ListLibrarian(id);
 
             if (librarian == null)
@@ -50,6 +53,7 @@ namespace Library.API.Controllers
             }
 
             return Ok(librarian);
+        
         }
         
         
@@ -57,11 +61,14 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian")]
         public async Task<ActionResult<Librarian>> PostLibrarian(LibrarianDTO librarianDTO)
         {
+            
             var librarian =await _service.CreateLibrarian(librarianDTO);
+            
             if (librarian == null)
                 return BadRequest("Error");
             else
                 return Created(nameof(GetLibrarian), librarian);
+        
         }
         
         
@@ -69,11 +76,14 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian")]
         public async Task<IActionResult> DeleteLibrarian(Guid id)
         {
+            
             var delete =await _service.DeleteLibrarian(id);
+            
             if (delete)
                 return NoContent();
             else
                 return BadRequest();
+        
         }
     }
 }

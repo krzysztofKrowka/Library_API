@@ -13,9 +13,13 @@ namespace Library.Repositories.Models
     {
 
         public string FirstName { get; set; }
+        
         public string LastName { get; set; }
+        
         public DateTime BirthDate { get; set; }
         
+
+
         public virtual ICollection<Book> Books { get; set; }
         
     }

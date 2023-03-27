@@ -15,12 +15,16 @@ namespace Library.Services.Test
             authorService = new Mock<IAuthorService>();
         }
 
+        
+        
         [Fact]
         public async void GetAuthorList()
         {
             //arrange
             var authorList = GetAuthorsData();
+            
             authorService.Setup(x => x.ListAuthors()).Returns(authorList);
+            
             var authorsController = new AuthorsController(authorService.Object);
             var authorsFromMethod = authorList.Result;
 
@@ -28,10 +32,12 @@ namespace Library.Services.Test
             var authorResult = await authorsController.GetAuthors();
             var authorsFromController = (authorResult.Result as OkObjectResult).Value as IEnumerable<AuthorDTO>;
 
+            
             //assert
             Assert.NotNull(authorsFromController);                                          
             Assert.Equal(authorsFromMethod.Count(), authorsFromController.Count());       
             Assert.True(authorsFromMethod.Equals(authorsFromController));                 
+        
         }
 
         [Fact]
@@ -40,8 +46,10 @@ namespace Library.Services.Test
             //arrange
             var author = GetAuthorData();
             var authorFromMethod = author.Result;
+            
             authorService.Setup(x => x.ListAuthor(
                                 Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4"))).Returns(author);
+            
             var authorsController = new AuthorsController(authorService.Object);
 
             //act
@@ -50,18 +58,16 @@ namespace Library.Services.Test
             
             var authorFromController = (authorsResult.Result as OkObjectResult).Value as AuthorDTO;
 
+            
             //assert
             Assert.NotNull(authorFromController);                                       
             Assert.True(authorFromMethod.Equals(authorFromController));               
+        
         }
 
         [Fact]
         public async void AddAuthor()
         {
-
-            //Error is propably becouse I give FName, LName, BDate to Post method, and in Post there is created new AuthorDTO, which is diffrent
-            // from authorDTO in this method, so there isn't given any response as it is not set
-
             //arrange
             var authorsFromMethod =await GetAuthorsData();
             var author = authorsFromMethod.ElementAt(0);
@@ -82,44 +88,51 @@ namespace Library.Services.Test
             var authorResult =await authorsController.PostAuthor(authorDTO.FirstName,authorDTO.LastName,authorDTO.BirthDate);
             var authorFromController = (authorResult.Result as CreatedResult).Value as AuthorDTO;
 
+            
             //assert
             Assert.NotNull(authorFromController);
             Assert.Equal(author.AuthorID, authorFromController.AuthorID);
             Assert.True(author.AuthorID == authorFromController.AuthorID);
+        
         }
+        
         
         private async Task<IEnumerable<AuthorDTO>> GetAuthorsData()
         {
             IEnumerable<AuthorDTO> authorsData = new List<AuthorDTO>
-        {
-
-            new AuthorDTO
             {
-                FirstName = "Jan",
-                LastName = "Nowak",
-                BirthDate = DateTime.Parse("2020-02-20"),
-                AuthorID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb"),
-                Books = new List<BookDTO>()
-            },
-             new AuthorDTO
-            {
-                FirstName = "Andrzej",
-                LastName = "Kowalski",
-                BirthDate = DateTime.Parse("2020-02-20"),
-                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e"),
-                Books = new List<BookDTO>()
-            },
-             new AuthorDTO
-            {
-                FirstName = "Jan",
-                LastName = "Tolkien",
-                BirthDate = DateTime.Parse("2020-02-20"),
-                AuthorID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4"),
-                Books = new List<BookDTO>()
-            }
-        };
+                new AuthorDTO
+                {
+                    FirstName = "Jan",
+                    LastName = "Nowak",
+                    BirthDate = DateTime.Parse("2020-02-20"),
+                    AuthorID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb"),
+                    Books = new List<BookDTO>()
+                },
+                 
+                new AuthorDTO
+                {
+                    FirstName = "Andrzej",
+                    LastName = "Kowalski",
+                    BirthDate = DateTime.Parse("2020-02-20"),
+                    AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e"),
+                    Books = new List<BookDTO>()
+                },
+                 
+                new AuthorDTO
+                {
+                    FirstName = "Jan",
+                    LastName = "Tolkien",
+                    BirthDate = DateTime.Parse("2020-02-20"),
+                    AuthorID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4"),
+                    Books = new List<BookDTO>()
+                }
+            };
+            
             return authorsData;
+        
         }
+        
         private async Task<AuthorDTO> GetAuthorData()
         {
             var authorData = new AuthorDTO
@@ -130,7 +143,9 @@ namespace Library.Services.Test
                 AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e"),
                 Books = new List<BookDTO>()
             };
+
             return authorData;
+        
         }
     }
 }

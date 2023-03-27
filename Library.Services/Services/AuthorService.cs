@@ -20,18 +20,26 @@ namespace Library.Services.Services
         {
             _repository = repository;
         }
+        
+        
+        
         protected bool ValidateAuthor(Author author)
         {
             var validation = true;
+            
             if (author.BirthDate.Year < 100 || author.BirthDate.Year > 2023)
                 validation = false;
+            
             if (!char.IsUpper(author.FirstName[0]))
                 validation = false;
+            
             if (!char.IsUpper(author.LastName[0]))
                 validation = false;
+            
             return validation;
                         
         }
+        
         public async Task<bool> AuthorExists(Guid id)
         {
             return await _repository.AuthorExists(id);
@@ -48,10 +56,12 @@ namespace Library.Services.Services
                 BirthDate = birthDate,
                 IsDeleted = false
             };
+            
             if (!ValidateAuthor(author))
                 return null;
 
             return AuthorToDTO(await _repository.CreateAuthor(author));
+        
         }
 
         public async Task<bool> DeleteAuthor(Guid id)
@@ -61,17 +71,24 @@ namespace Library.Services.Services
 
         public async Task<AuthorDTO> ListAuthor(Guid id)
         {
+            
             var author = AuthorToDTO(await _repository.ListAuthor(id));
             author.Books = BookService.BooksToDTO(await _repository.ListBooksByAuthor(id));
+            
             return author;
+        
         }
 
         public async Task<IEnumerable<AuthorDTO>> ListAuthors()
         {
+            
             var authors = AuthorsToDTO(await _repository.ListAuthors());
+            
             foreach(var author in authors)
                 author.Books= BookService.BooksToDTO(await _repository.ListBooksByAuthor(author.AuthorID));
+            
             return authors;
+        
         }
 
         public async Task<bool> PutAuthor(Guid id, AuthorDTO authorToPut)
@@ -88,11 +105,14 @@ namespace Library.Services.Services
                 return false;
             
             return await _repository.PutAuthor(id, author);
+        
         }
 
         public async Task<AuthorDTO> ListAuthorOfBook(string title)
         {
+            
             var author =await _repository.ListAuthorOfBook(title);
+            
             var authorDTO = new AuthorDTO()
             {
                 AuthorID = author.ID,
@@ -101,11 +121,14 @@ namespace Library.Services.Services
                 LastName = author.LastName,
                 Books = BookService.BooksToDTO(await _repository.ListBooksByAuthor(author.ID))
             };
+            
             return authorDTO;
         }
 
+        
         public static AuthorDTO AuthorToDTO(Author author)
         {
+            
             return new AuthorDTO
             {
                 AuthorID = author.ID,
@@ -113,13 +136,19 @@ namespace Library.Services.Services
                 LastName = author.LastName,
                 BirthDate = author.BirthDate
             };
+        
         }
+        
         public static IEnumerable<AuthorDTO>AuthorsToDTO(IEnumerable<Author> authors)
         {
+            
             var result = new List<AuthorDTO>();
+            
             foreach (var author in authors)
                 result.Add(AuthorToDTO(author));
+            
             return result;
+        
         }
     }
 }

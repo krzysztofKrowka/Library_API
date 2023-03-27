@@ -25,6 +25,7 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthors()
         {
+            
             if (await _service.ListAuthors() == null)
             {
                 return NotFound();
@@ -39,12 +40,14 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant,Reader")]
         public async Task<ActionResult<AuthorDTO>> GetAuthorOfBook(string title)
         {
+            
             if (await _service.ListAuthors() == null)
             {
                 return NotFound();
             }
 
             return Ok(await _service.ListAuthorOfBook(title));
+        
         }
 
 
@@ -52,10 +55,12 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<ActionResult<AuthorDTO>> GetAuthor(Guid id)
         {
+            
             if (await _service.ListAuthor(id) == null)
             {
                 return NotFound();
             }
+            
             var author = await _service.ListAuthor(id);
 
             if (author == null)
@@ -64,6 +69,7 @@ namespace Library.API.Controllers
             }
 
             return Ok(author);
+        
         }
 
         
@@ -71,11 +77,14 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> PutAuthor(Guid id, AuthorDTO author)
         {
+            
             var put =await _service.PutAuthor(id, author);
+            
             if (put)
                 return NoContent();
             else
                 return BadRequest();
+        
         }
 
 
@@ -90,6 +99,7 @@ namespace Library.API.Controllers
                 return BadRequest("Error");
             else
                 return Created(nameof(GetAuthor), author);
+       
         }
 
 
@@ -97,11 +107,14 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> DeleteAuthor(Guid id)
         {
+            
             var delete = await _service.DeleteAuthor(id);
+            
             if (delete)
                 return NoContent();
             else
                 return BadRequest();
+        
         }
 
     }

@@ -15,26 +15,38 @@ namespace Library.Services.Services
     public class LibrarianService : ILibrarianService
     {
         readonly ILibrarianRepository _repository;
+        
         public LibrarianService(ILibrarianRepository repository)
         {
             _repository = repository;
         }
 
+        
+        
         protected bool ValidateLibrarian(LibrarianDTO librarian)
         {
+            
             var validation = true;
+            
             if (librarian == null)
                 validation = false;
+            
             if (!char.IsUpper(librarian.FirstName[0]))
                 validation = false;
+            
             if (!char.IsUpper(librarian.LastName[0]))
                 validation = false;
+            
             return validation;
+        
         }
+        
         public async Task<Librarian> CreateLibrarian(LibrarianDTO librarianDTO)
         {
+            
             if (!ValidateLibrarian(librarianDTO))
                 return null;
+            
             var librarian = new Librarian
             {
                 ID = Guid.NewGuid(),
@@ -44,6 +56,7 @@ namespace Library.Services.Services
             };
 
             return await _repository.CreateLibrarian(librarian);
+        
         }
 
         public async Task<bool> DeleteLibrarian(Guid librarianID)

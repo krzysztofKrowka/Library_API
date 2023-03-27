@@ -16,21 +16,29 @@ namespace Library.Repositories.Repositories
         {
             _context = context;
         }
+        
+        
+        
         public async Task<Librarian> CreateLibrarian(Librarian librarian)
         {
-                _context.Librarians.Add(librarian);
-                await _context.SaveChangesAsync();
-                return librarian;
+                
+            _context.Librarians.Add(librarian);
+            await _context.SaveChangesAsync();
+                
+            return librarian;
             
         }
 
         public async Task<bool> DeleteLibrarian(Guid librarianID)
         {
+            
             var librarian =await _context.Librarians.Where(b => b.ID == librarianID).FirstAsync();
                 
             librarian.IsDeleted = true;
             await _context.SaveChangesAsync();
+            
             return true;
+        
         }
 
         public async Task<Librarian> ListLibrarian(Guid librarianID)

@@ -9,6 +9,7 @@ namespace Library.Repositories.Models
     public class BaseEnitty
     {   
         public Guid ID { get; set; }
+        
         public bool IsDeleted { get; set; }
     }   
 }

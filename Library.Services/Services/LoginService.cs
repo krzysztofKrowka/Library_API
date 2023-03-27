@@ -19,12 +19,15 @@ namespace Library.Services.Services
         }
         public string Login(UserLogin userLogin)
         {
+            
             var user = new User
             {
                 Username = userLogin.Username,
                 Password = userLogin.Password
             };
+            
             return _loginRepository.Login(user);
+        
         }
     }
 }

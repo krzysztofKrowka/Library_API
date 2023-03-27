@@ -9,6 +9,7 @@ namespace Library.Services.Models
     public class LibrarianDTO
     {
         public string FirstName { get; set; }
+        
         public string LastName { get; set; }
     }
 }
