@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace libraryAPI.Migrations
+namespace Library.API.Migrations
 {
-    [DbContext(typeof(BookContext))]
+    [DbContext(typeof(LibraryContext))]
     [Migration("20230316123222_LibrarianUpdate")]
     partial class LibrarianUpdate
     {

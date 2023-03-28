@@ -1,5 +1,6 @@
 ﻿using Library.Repositories.Interfaces;
 using Library.Repositories.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,17 @@ namespace Library.Repositories.Repositories
 {
     public class LibrarianRepository : ILibrarianRepository
     {
-        BookContext _context;
-        public LibrarianRepository(BookContext context)
+        readonly ILibraryContext _context;
+        public LibrarianRepository(ILibraryContext context)
         {
             _context = context;
         }
-        public Librarian CreateLibrarian(Librarian librarian)
+        public async Task<Librarian> CreateLibrarian(Librarian librarian)
         {
             try
             {
                 _context.Librarians.Add(librarian);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return librarian;
             }
             catch
@@ -29,13 +30,13 @@ namespace Library.Repositories.Repositories
             }
         }
 
-        public bool DeleteLibrarian(Guid librarianID)
+        public async Task<bool> DeleteLibrarian(Guid librarianID)
         {
-            Librarian librarian = _context.Librarians.Where(b => b.LibrarianID == librarianID).Single();
+            var librarian =await _context.Librarians.Where(b => b.LibrarianID == librarianID).FirstAsync();
             try
             {
                 _context.Librarians.Remove(librarian);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch
@@ -44,14 +45,14 @@ namespace Library.Repositories.Repositories
             }
         }
 
-        public Librarian ListLibrarian(Guid librarianID)
+        public async Task<Librarian> ListLibrarian(Guid librarianID)
         {
-            return _context.Librarians.Where(b => b.LibrarianID == librarianID).Single();
+            return await _context.Librarians.Where(b => b.LibrarianID == librarianID).FirstAsync();
         }
 
-        public IEnumerable<Librarian> ListLibrarians()
+        public async Task<IEnumerable<Librarian>> ListLibrarians()
         {
-            return _context.Librarians.Select(x => x).ToList();
+            return await _context.Librarians.ToListAsync();
         }
     }
 }

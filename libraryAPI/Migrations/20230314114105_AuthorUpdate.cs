@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace libraryAPI.Migrations
+namespace Library.API.Migrations
 {
     /// <inheritdoc />
     public partial class AuthorUpdate : Migration

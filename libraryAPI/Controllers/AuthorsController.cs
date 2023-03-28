@@ -3,7 +3,11 @@ using Library.Repositories.Repositories;
 using Library.Repositories.Models;
 using Library.Services.Models;
 using Library.Services.Interfaces;
-namespace libraryAPI.Controllers
+using Library.Services.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
+
+namespace Library.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -11,45 +15,46 @@ namespace libraryAPI.Controllers
     {
         private readonly IAuthorService _service;
 
-        [ActivatorUtilitiesConstructor]
-        public AuthorsController(BookContext bookContext)
+        public AuthorsController(IAuthorService service)
         {
-            _service = new AuthorService(this.ModelState, new AuthorRepository(bookContext));
+            _service = service;
         }
 
 
-        // GET: api/Books
         [HttpGet]
-        public ActionResult<IEnumerable<Author>> GetAuthors()
+        [Authorize(Roles = "Librarian,Assistant")]
+        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
         {
-            if (_service.ListAuthors() == null)
+            if (await _service.ListAuthors() == null)
             {
                 return NotFound();
             }
 
-            return Ok(_service.ListAuthors());
+            return Ok(await _service.ListAuthors());
 
         }
         [HttpGet("OfBook/{title}")]
-        public async Task<ActionResult<Author>> GetAuthorOfBook(string title)
+        [Authorize(Roles = "Librarian,Assistant,Reader")]
+        public async Task<ActionResult<AuthorDTO>> GetAuthorOfBook(string title)
         {
-            if (_service.ListAuthors() == null)
+            if (await _service.ListAuthors() == null)
             {
                 return NotFound();
             }
 
-            return Ok(_service.ListAuthorOfBook(title));
+            return Ok(await _service.ListAuthorOfBook(title));
         }
 
-        // GET: api/Books/5
+
         [HttpGet("{id}")]
+        [Authorize(Roles = "Librarian,Assistant")]
         public async Task<ActionResult<Author>> GetAuthor(Guid id)
         {
-            if (_service.ListAuthor(id) == null)
+            if (await _service.ListAuthor(id) == null)
             {
                 return NotFound();
             }
-            var author = _service.ListAuthor(id);
+            var author = await _service.ListAuthor(id);
 
             if (author == null)
             {
@@ -59,35 +64,35 @@ namespace libraryAPI.Controllers
             return Ok(author);
         }
 
-        // PUT: api/Books/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> PutAuthor(Guid id, AuthorDTO author)
         {
-            var put = _service.PutAuthor(id, author);
+            var put =await _service.PutAuthor(id, author);
             if (put)
                 return NoContent();
             else
                 return BadRequest();
         }
 
-        // POST: api/Books
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
-        public async Task<ActionResult<Book>> PostAuthor(AuthorDTO author)
+        [Authorize(Roles = "Librarian,Assistant")]
+        public async Task<ActionResult<Author>> PostAuthor(AuthorDTO authorDTO)
         {
-            Author authorToCreate = _service.CreateAuthor(author);
-            if (authorToCreate == null)
+            var author = await _service.CreateAuthor(authorDTO);
+            if (author == null)
                 return BadRequest("Error");
             else
-                return CreatedAtAction(nameof(GetAuthor), new { id = authorToCreate.AuthorID }, author);
+                return Created(nameof(GetAuthor), author);
         }
-        
-        // DELETE: api/Authors/5
+
+
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> DeleteAuthor(Guid id)
         {
-            var delete = _service.DeleteAuthor(id);
+            var delete = await _service.DeleteAuthor(id);
             if (delete)
                 return NoContent();
             else

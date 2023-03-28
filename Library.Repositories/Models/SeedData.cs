@@ -10,9 +10,9 @@ public static class SeedData
 {
     public static void Initialize(IServiceProvider serviceProvider)
     {
-        using (var context = new BookContext(
+        using (var context = new LibraryContext(
             serviceProvider.GetRequiredService<
-                DbContextOptions<BookContext>>()))
+                DbContextOptions<LibraryContext>>()))
         {
             // Look for any books.
             if (context.Books.Any())

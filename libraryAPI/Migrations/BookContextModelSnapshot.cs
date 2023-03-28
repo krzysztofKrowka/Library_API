@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace libraryAPI.Migrations
+namespace Library.API.Migrations
 {
-    [DbContext(typeof(BookContext))]
+    [DbContext(typeof(LibraryContext))]
     partial class BookContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -3,8 +3,10 @@ using Library.Repositories.Repositories;
 using Library.Services.Interfaces;
 using Library.Services.Models;
 using Microsoft.AspNetCore.Mvc;
+using Library.Services.Services;
+using Microsoft.AspNetCore.Authorization;
 
-namespace libraryAPI.Controllers
+namespace Library.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -12,30 +14,33 @@ namespace libraryAPI.Controllers
     {
         private readonly ILibrarianService _service;
 
-        [ActivatorUtilitiesConstructor]
-        public LibrarianController(BookContext bookContext)
+        public LibrarianController(ILibrarianService service)
         {
-            _service = new LibrarianService(this.ModelState, new LibrarianRepository(bookContext));
+            _service = service;
         }
+
+
         [HttpGet]
-        public ActionResult<IEnumerable<Librarian>> GetLibrarians()
+        [Authorize(Roles = "Librarian")]
+        public async Task<ActionResult<IEnumerable<Librarian>>> GetLibrarians()
         {
-            if (_service.ListLibrarians() == null)
+            if (await _service.ListLibrarians() == null)
             {
                 return NotFound();
             }
 
-            return Ok(_service.ListLibrarians());
+            return Ok(await _service.ListLibrarians());
 
         }
         [HttpGet("{id}")]
+        [Authorize(Roles = "Librarian")]
         public async Task<ActionResult<Librarian>> GetLibrarian(Guid id)
         {
-            if (_service.ListLibrarian(id) == null)
+            if (await _service.ListLibrarian(id) == null)
             {
                 return NotFound();
             }
-            var librarian = _service.ListLibrarian(id);
+            var librarian =await _service.ListLibrarian(id);
 
             if (librarian == null)
             {
@@ -45,18 +50,20 @@ namespace libraryAPI.Controllers
             return Ok(librarian);
         }
         [HttpPost]
+        [Authorize(Roles = "Librarian")]
         public async Task<ActionResult<Librarian>> PostLibrarian(LibrarianDTO librarianDTO)
         {
-            Librarian book = _service.CreateLibrarian(librarianDTO);
-            if (book == null)
+            var librarian =await _service.CreateLibrarian(librarianDTO);
+            if (librarian == null)
                 return BadRequest("Error");
             else
-                return CreatedAtAction(nameof(GetLibrarian), new { id = book.LibrarianID }, librarianDTO);
+                return Created(nameof(GetLibrarian), librarian);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Librarian")]
         public async Task<IActionResult> DeleteLibrarian(Guid id)
         {
-            var delete = _service.DeleteLibrarian(id);
+            var delete =await _service.DeleteLibrarian(id);
             if (delete)
                 return NoContent();
             else

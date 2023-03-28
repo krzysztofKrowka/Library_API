@@ -9,10 +9,10 @@ namespace Library.Services.Interfaces
 {
     public interface ILibrarianService
     {
-        Librarian ListLibrarian(Guid librarianID);
-        IEnumerable<Librarian> ListLibrarians();
-        Librarian CreateLibrarian(LibrarianDTO librarian);
-        bool DeleteLibrarian(Guid librarianID);
+        Task<Librarian> ListLibrarian(Guid librarianID);
+        Task<IEnumerable<Librarian>> ListLibrarians();
+        Task<Librarian> CreateLibrarian(LibrarianDTO librarian);
+        Task<bool> DeleteLibrarian(Guid librarianID);
 
     }
 }

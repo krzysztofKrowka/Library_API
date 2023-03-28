@@ -1,6 +1,7 @@
 ﻿using Library.Repositories.Interfaces;
 using Library.Repositories.Models;
 using Library.Services.Interfaces;
+using Library.Services.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
@@ -8,72 +9,72 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Library.Services.Models
+namespace Library.Services.Services
 {
     public class AuthorService : IAuthorService
     {
-        private ModelStateDictionary _modelState;
         private readonly IAuthorRepository _repository;
 
-        public AuthorService(ModelStateDictionary modelState, IAuthorRepository repository)
+        public AuthorService(IAuthorRepository repository)
         {
-            _modelState = modelState;
             _repository = repository;
         }
         protected bool ValidateAuthor(AuthorDTO author)
         {
+            var validation = true;
             if (author.BirthDate.Year < 100 || author.BirthDate.Year > 2023)
-                _modelState.AddModelError("Birth Date", "Birth date is wrong");
+                validation = false;
             if (!char.IsUpper(author.FirstName[0]))
-                _modelState.AddModelError("First Name", "First name must start with upper letter");
+                validation = false;
             if (!char.IsUpper(author.LastName[0]))
-                _modelState.AddModelError("Last Name", "Last name must start with upper letter");
-            return _modelState.IsValid;
+                validation = false;
+            return validation;
+                        
         }
-        public bool AuthorExists(Guid id)
+        public async Task<bool> AuthorExists(Guid id)
         {
-            return _repository.AuthorExists(id);
+            return await _repository.AuthorExists(id);
         }
 
-        public Author CreateAuthor(AuthorDTO authorToCreate)
+        public async Task<Author> CreateAuthor(AuthorDTO authorToCreate)
         {
             if (!ValidateAuthor(authorToCreate))
                 return null;
             var author = new Author
             {
+                AuthorID = Guid.NewGuid(),
                 FirstName = authorToCreate.FirstName,
                 LastName = authorToCreate.LastName,
                 BirthDate = authorToCreate.BirthDate
             };
             try
             {
-                author = _repository.CreateAuthor(author);
+                return await _repository.CreateAuthor(author);
             }
             catch
             {
                 return null;
             }
-            return author;
         }
 
-        public bool DeleteAuthor(Guid id)
+        public async Task<bool> DeleteAuthor(Guid id)
         {
-            return _repository.DeleteAuthor(id);
+            return await _repository.DeleteAuthor(id);
         }
 
-        public Author ListAuthor(Guid id)
+        public async Task<Author> ListAuthor(Guid id)
         {
-            return _repository.ListAuthor(id);
+            return await _repository.ListAuthor(id);
         }
 
-        public IEnumerable<Author> ListAuthors()
+        public async Task<IEnumerable<Author>> ListAuthors()
         {
-            return _repository.ListAuthors();
+            return await _repository.ListAuthors();
         }
 
-        public bool PutAuthor(Guid id, AuthorDTO authorToPut)
+        public async Task<bool> PutAuthor(Guid id, AuthorDTO authorToPut)
         {
-            if(!ValidateAuthor(authorToPut))
+            if (!ValidateAuthor(authorToPut))
                 return false;
             var author = new Author
             {
@@ -81,12 +82,19 @@ namespace Library.Services.Models
                 LastName = authorToPut.LastName,
                 BirthDate = authorToPut.BirthDate
             };
-            return _repository.PutAuthor(id,author);
+            return await _repository.PutAuthor(id, author);
         }
 
-        public Author ListAuthorOfBook(string title)
+        public async Task<AuthorDTO> ListAuthorOfBook(string title)
         {
-            return _repository.ListAuthorOfBook(title);
+            var author =await _repository.ListAuthorOfBook(title);
+            var authorDTO = new AuthorDTO()
+            {
+                BirthDate = author.BirthDate,
+                FirstName = author.FirstName,
+                LastName = author.LastName
+            };
+            return authorDTO;
         }
     }
 }
