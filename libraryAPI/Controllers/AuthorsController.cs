@@ -23,15 +23,15 @@ namespace Library.API.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Librarian,Assistant")]
-        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthors(int pageSize, int pageNumber)
         {
             
-            if (await _service.ListAuthors() == null)
+            if (await _service.ListAuthors(pageSize, pageNumber) == null)
             {
                 return NotFound();
             }
 
-            return Ok(await _service.ListAuthors());
+            return Ok(await _service.ListAuthors(pageSize, pageNumber));
 
         }
         
@@ -41,7 +41,7 @@ namespace Library.API.Controllers
         public async Task<ActionResult<AuthorDTO>> GetAuthorOfBook(string title)
         {
             
-            if (await _service.ListAuthors() == null)
+            if (await _service.ListAuthorOfBook(title) == null)
             {
                 return NotFound();
             }

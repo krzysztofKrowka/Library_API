@@ -100,9 +100,10 @@ namespace Library.Services.Services
         
         }
         
-        public async Task<List<BookDTO>> ListBooks()
+        public async Task<List<BookDTO>> ListBooks(int pageSize, int pageNumber)
         {
-            return BooksToDTO(await _repository.ListBooks());
+            var books = await _repository.ListBooks();
+            return BooksToDTO( books.Skip((pageNumber-1)*pageSize).Take(pageSize) );
         }
         
         public async Task<BookDTO> ListBook(string title)

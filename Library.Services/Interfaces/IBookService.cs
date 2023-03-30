@@ -19,6 +19,6 @@ namespace Library.Services.Interfaces
         
         Task<BookDTO> CreateBook(BookDTO productToCreate);
         
-        Task<List<BookDTO>> ListBooks();
+        Task<List<BookDTO>> ListBooks(int pageSize, int pageNumber);
     }
 }

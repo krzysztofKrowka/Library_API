@@ -79,15 +79,15 @@ namespace Library.Services.Services
         
         }
 
-        public async Task<IEnumerable<AuthorDTO>> ListAuthors()
+        public async Task<IEnumerable<AuthorDTO>> ListAuthors(int pageSize, int pageNumber)
         {
+            var authors = await _repository.ListAuthors();
+            var authorsDTO = AuthorsToDTO(authors.Skip((pageNumber - 1) * pageSize).Take(pageSize));
             
-            var authors = AuthorsToDTO(await _repository.ListAuthors());
-            
-            foreach(var author in authors)
+            foreach(var author in authorsDTO)
                 author.Books= BookService.BooksToDTO(await _repository.ListBooksByAuthor(author.AuthorID));
             
-            return authors;
+            return authorsDTO;
         
         }
 

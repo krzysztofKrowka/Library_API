@@ -23,15 +23,15 @@ namespace Library.API.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDTO>>> GetBooks()
+        public async Task<ActionResult<IEnumerable<BookDTO>>> GetBooks(int pageSize, int pageNumber)
         {
             
-            if (await _service.ListBooks() == null)
+            if (await _service.ListBooks(pageSize, pageNumber) == null)
             {
                 return NotFound();
             }
 
-            return Ok(await _service.ListBooks());
+            return Ok(await _service.ListBooks(pageSize, pageNumber));
 
         }
 
@@ -40,7 +40,7 @@ namespace Library.API.Controllers
         public async Task<ActionResult<IEnumerable<BookDTO>>> GetBooksByAuthor(string FirstName, string LastName)
         {
             
-            if (await _service.ListBooks() == null)
+            if (await _service.ListBooksByAuthor(FirstName,LastName) == null)
             {
                 return NotFound();
             }

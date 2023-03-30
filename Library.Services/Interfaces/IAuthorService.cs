@@ -17,7 +17,7 @@ namespace Library.Services.Interfaces
         
         Task<AuthorDTO> CreateAuthor(string fName,string lName, DateTime bDate);
         
-        Task<IEnumerable<AuthorDTO>> ListAuthors();
+        Task<IEnumerable<AuthorDTO>> ListAuthors(int pageSize, int pageNumber);
         
         Task<bool> AuthorExists(Guid id);
         
