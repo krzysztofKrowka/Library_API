@@ -1,5 +1,7 @@
 ﻿using Library.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Mysqlx.Crud;
+using System.Reflection.Metadata;
 
 namespace Library.Repositories.Models
 {
@@ -7,23 +9,29 @@ namespace Library.Repositories.Models
     { 
         public LibraryContext(DbContextOptions<LibraryContext> options) : base(options) {  }
         
-        
         public DbSet<Book> Books { get; set; }
+        
         public DbSet<Author> Authors { get; set; }
-        public DbSet<BookAuthors> BookAuthors { get; set; }
+        
         public DbSet<Librarian> Librarians { get; set; }
-        public List<User> Users { get; } = new()
-        {
-            new User(){ Username="librarian",Password="librarian",Role="Librarian"},
-            new User(){ Username="assistant",Password="assistant",Role="Assistant"},
-            new User(){ Username="reader",Password="reader",Role="Reader"},
-        };
+        
+        public DbSet<User> Users { get; set; }
 
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=library;Trusted_Connection=True;TrustServerCertificate=True;",b => b.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null));
+            
             base.OnConfiguring(optionsBuilder);
+  
+        }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>()
+                .HasOne(b => b.Author)
+                .WithMany(a => a.Books)
+                .HasForeignKey(b => b.AuthorID);
         }
     }
 }

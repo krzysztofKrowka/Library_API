@@ -4,6 +4,7 @@ using Library.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.API.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    [Migration("20230324082348_SoftDelete")]
+    partial class SoftDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,6 +98,23 @@ namespace Library.API.Migrations
                     b.ToTable("Books");
                 });
 
+            modelBuilder.Entity("Library.Repositories.Models.BookAuthors", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Author_ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Book_ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("BookAuthors");
+                });
+
             modelBuilder.Entity("Library.Repositories.Models.Librarian", b =>
                 {
                     b.Property<Guid>("ID")
@@ -115,29 +135,6 @@ namespace Library.API.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Librarians");
-                });
-
-            modelBuilder.Entity("Library.Repositories.Models.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Library.Repositories.Models.Book", b =>

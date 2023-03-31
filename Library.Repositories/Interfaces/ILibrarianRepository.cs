@@ -10,8 +10,11 @@ namespace Library.Repositories.Interfaces
     public interface ILibrarianRepository
     {
         Task<Librarian> ListLibrarian(Guid librarianID);
+        
         Task<IEnumerable<Librarian>> ListLibrarians();
+        
         Task<Librarian> CreateLibrarian(Librarian librarian);
+        
         Task<bool> DeleteLibrarian(Guid librarianID);
     }
 }

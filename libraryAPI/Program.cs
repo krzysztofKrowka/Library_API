@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<LibraryContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("LibraryDatabase"), b => b.MigrationsAssembly("libraryAPI")));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("LibraryDatabase"), b => b.MigrationsAssembly("Library.API")));
 
 builder.Services.AddMvc();
 
@@ -25,8 +25,8 @@ builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ILibrarianRepository, LibrarianRepository>();
 builder.Services.AddScoped<ILibrarianService, LibrarianService>();
 
-builder.Services.AddScoped<ILoginRepository, LoginRepository>();
-builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();

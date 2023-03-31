@@ -12,25 +12,30 @@ using System.Threading.Tasks;
 
 namespace Library.Repositories.Repositories
 {
-    public class LoginRepository : ILoginRepository
+    public class UserRepository : IUserRepository
     {
         private readonly IConfiguration _configuration;
         private readonly ILibraryContext _context;
-        public LoginRepository(IConfiguration configuration, ILibraryContext context)
+        public UserRepository(IConfiguration configuration, ILibraryContext context)
         {
             _configuration = configuration;
             _context = context;
         }
+        
+        
         private User Authenticate(User userLogin)
         {
+            
             var currentUser = _context.Users.FirstOrDefault(x => x.Username.ToLower() ==
                 userLogin.Username.ToLower() && x.Password == userLogin.Password);
             
             return currentUser;
+        
         }
 
         private string GenerateToken(User user)
         {
+            
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -49,10 +54,12 @@ namespace Library.Repositories.Repositories
 
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        
         }
 
         public string Login(User userLogin)
         {
+            
             var user = Authenticate(userLogin);
             
             if (user != null)
@@ -62,6 +69,14 @@ namespace Library.Repositories.Repositories
             }
 
             return null;
+        
+        }
+        public async Task<User> Register(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return user;
         }
 
     }

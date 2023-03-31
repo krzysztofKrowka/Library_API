@@ -15,111 +15,137 @@ namespace Library.Services.Test
             authorService = new Mock<IAuthorService>();
         }
 
+        
+        
         [Fact]
         public async void GetAuthorList()
         {
             //arrange
             var authorList = GetAuthorsData();
-            authorService.Setup(x => x.ListAuthors()).Returns(authorList);
+            
+            authorService.Setup(x => x.ListAuthors(1, 1)).Returns(authorList);
+            
             var authorsController = new AuthorsController(authorService.Object);
             var authorsFromMethod = authorList.Result;
 
             //act
-            var authorResult = await authorsController.GetAuthors();
-            var authorsFromController = (authorResult.Result as OkObjectResult).Value as IEnumerable<Author>;
+            var authorResult = await authorsController.GetAuthors(1,1);
+            var authorsFromController = (authorResult.Result as OkObjectResult).Value as IEnumerable<AuthorDTO>;
 
+            
             //assert
-            Assert.NotNull(authorsFromController);                                        // This is true
-            Assert.Equal(authorsFromMethod.Count(), authorsFromController.Count());        // This is true
-            Assert.Equal(authorsFromMethod.ToString(), authorsFromController.ToString()); // This is true
-            Assert.True(authorsFromMethod.Equals(authorsFromController));                // This is true
+            Assert.NotNull(authorsFromController);                                          
+            Assert.Equal(authorsFromMethod.Count(), authorsFromController.Count());       
+            Assert.True(authorsFromMethod.Equals(authorsFromController));                 
+        
         }
 
         [Fact]
-        public async void GetAuthorByTitle()
+        public async void GetAuthorByID()
         {
             //arrange
             var author = GetAuthorData();
             var authorFromMethod = author.Result;
+            
             authorService.Setup(x => x.ListAuthor(
                                 Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4"))).Returns(author);
+            
             var authorsController = new AuthorsController(authorService.Object);
 
             //act
             var authorsResult = await authorsController.
                                 GetAuthor(Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4"));
-            var authorFromController = (authorsResult.Result as OkObjectResult).Value as Author;
+            
+            var authorFromController = (authorsResult.Result as OkObjectResult).Value as AuthorDTO;
 
+            
             //assert
-            Assert.NotNull(authorFromController);                                       // This is true
-            Assert.Equal(authorFromMethod.ToString(), authorFromController.ToString()); // This is true
-            Assert.True(authorFromMethod.Equals(authorFromController));                // This is true
+            Assert.NotNull(authorFromController);                                       
+            Assert.True(authorFromMethod.Equals(authorFromController));               
+        
         }
 
-        //I don't know why this does not work
-        //It's the exact same as the one in LibrarianTest
         [Fact]
         public async void AddAuthor()
         {
             //arrange
-            var authorList = GetAuthorsData();
-            var authorsFromMethod = authorList.Result;
-            
+            var authorsFromMethod =await GetAuthorsData();
+            var author = authorsFromMethod.ElementAt(0);
+
             var authorDTO = new AuthorDTO
             {
-                FirstName = authorsFromMethod.ElementAt(2).FirstName,
-                LastName = authorsFromMethod.ElementAt(2).LastName
+                FirstName = author.FirstName,
+                LastName = author.LastName,
+                BirthDate = author.BirthDate
             };
             
-            authorService.Setup(x => x.CreateAuthor(authorDTO)).
-                          Returns(Task.FromResult(authorsFromMethod.ElementAt(2)));
+            authorService.Setup(x => x.CreateAuthor(authorDTO.FirstName, authorDTO.LastName, authorDTO.BirthDate)).
+                          Returns(Task.FromResult(author));
+            
             var authorsController = new AuthorsController(authorService.Object);
 
             //act
-            var authorResult = await authorsController.PostAuthor(authorDTO);
-            var authorFromController = (authorResult.Result as CreatedResult).Value as Author;
+            var authorResult =await authorsController.PostAuthor(authorDTO.FirstName,authorDTO.LastName,authorDTO.BirthDate);
+            var authorFromController = (authorResult.Result as CreatedResult).Value as AuthorDTO;
 
+            
             //assert
             Assert.NotNull(authorFromController);
-            Assert.Equal(authorsFromMethod.ElementAt(2).AuthorID, authorFromController.AuthorID);
-            Assert.True(authorsFromMethod.ElementAt(2).AuthorID == authorFromController.AuthorID);
+            Assert.Equal(author.AuthorID, authorFromController.AuthorID);
+            Assert.True(author.AuthorID == authorFromController.AuthorID);
+        
         }
         
-        private async Task<IEnumerable<Author>> GetAuthorsData()
+        
+        private async Task<IEnumerable<AuthorDTO>> GetAuthorsData()
         {
-            IEnumerable<Author> authorsData = new List<Author>
-        {
-
-            new Author
+            IEnumerable<AuthorDTO> authorsData = new List<AuthorDTO>
             {
-                FirstName = "Jan",
-                LastName = "Nowak",
-                AuthorID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb")
-            },
-             new Author
-            {
-                FirstName = "Andrzej",
-                LastName = "Kowalski",
-                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
-            },
-             new Author
-            {
-                FirstName = "Jan",
-                LastName = "Tolkien",
-                AuthorID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4")
-            }
-        };
-            return authorsData;
-        }
-        private async Task<Author> GetAuthorData()
-        {
-            var authorData = new Author
-            {
-                FirstName = "Andrzej",
-                LastName = "Kowalski",
-                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e")
+                new AuthorDTO
+                {
+                    FirstName = "Jan",
+                    LastName = "Nowak",
+                    BirthDate = DateTime.Parse("2020-02-20"),
+                    AuthorID = Guid.Parse("78111edf-a63e-4402-a1b4-6a03afdcb4eb"),
+                    Books = new List<BookDTO>()
+                },
+                 
+                new AuthorDTO
+                {
+                    FirstName = "Andrzej",
+                    LastName = "Kowalski",
+                    BirthDate = DateTime.Parse("2020-02-20"),
+                    AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e"),
+                    Books = new List<BookDTO>()
+                },
+                 
+                new AuthorDTO
+                {
+                    FirstName = "Jan",
+                    LastName = "Tolkien",
+                    BirthDate = DateTime.Parse("2020-02-20"),
+                    AuthorID = Guid.Parse("70b78843-c95e-4084-aad5-5af356d645b4"),
+                    Books = new List<BookDTO>()
+                }
             };
+            
+            return authorsData;
+        
+        }
+        
+        private async Task<AuthorDTO> GetAuthorData()
+        {
+            var authorData = new AuthorDTO
+            {
+                FirstName = "Andrzej",
+                LastName = "Kowalski",
+                BirthDate = DateTime.Parse("2020-02-20"),
+                AuthorID = Guid.Parse("9d3e2274-2ba6-40d6-b173-bd25f301ca1e"),
+                Books = new List<BookDTO>()
+            };
+
             return authorData;
+        
         }
     }
 }

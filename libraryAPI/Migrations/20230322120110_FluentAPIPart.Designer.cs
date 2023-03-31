@@ -4,6 +4,7 @@ using Library.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.API.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    [Migration("20230322120110_FluentAPIPart")]
+    partial class FluentAPIPart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +27,7 @@ namespace Library.API.Migrations
 
             modelBuilder.Entity("Library.Repositories.Models.Author", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<Guid>("AuthorID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -35,21 +38,18 @@ namespace Library.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("AuthorID");
 
                     b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("Library.Repositories.Models.Book", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<Guid>("BookID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -75,9 +75,6 @@ namespace Library.API.Migrations
                     b.Property<bool>("IsBorrowed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<int>("PublicationDate")
                         .HasColumnType("int");
 
@@ -88,16 +85,33 @@ namespace Library.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("BookID");
 
                     b.HasIndex("AuthorID");
 
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("Library.Repositories.Models.Librarian", b =>
+            modelBuilder.Entity("Library.Repositories.Models.BookAuthors", b =>
                 {
                     b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Author_ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Book_ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("BookAuthors");
+                });
+
+            modelBuilder.Entity("Library.Repositories.Models.Librarian", b =>
+                {
+                    b.Property<Guid>("LibrarianID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -105,39 +119,13 @@ namespace Library.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("LibrarianID");
 
                     b.ToTable("Librarians");
-                });
-
-            modelBuilder.Entity("Library.Repositories.Models.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Library.Repositories.Models.Book", b =>

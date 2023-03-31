@@ -10,18 +10,12 @@ public static class SeedData
 {
     public static void Initialize(IServiceProvider serviceProvider)
     {
-        using (var context = new LibraryContext(
-            serviceProvider.GetRequiredService<
-                DbContextOptions<LibraryContext>>()))
+        using (var context = new LibraryContext( serviceProvider.GetRequiredService< DbContextOptions<LibraryContext> > () ))
         {
-            // Look for any books.
             if (context.Books.Any())
             {
-                return;   // DB has been seeded
+                return;   
             }
-            context.Books.AddRange(
-               
-            );
             context.SaveChanges();
         }
     }

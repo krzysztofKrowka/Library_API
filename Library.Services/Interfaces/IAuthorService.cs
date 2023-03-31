@@ -10,12 +10,17 @@ namespace Library.Services.Interfaces
     public interface IAuthorService
     {
         Task<bool> PutAuthor(Guid id, AuthorDTO author);
+        
         Task<bool> DeleteAuthor(Guid id);
-        Task<Author> ListAuthor(Guid id);
-        Task<Author> CreateAuthor(AuthorDTO authorToCreate);
-        Task<IEnumerable<Author>> ListAuthors();
+        
+        Task<AuthorDTO> ListAuthor(Guid id);
+        
+        Task<AuthorDTO> CreateAuthor(string fName,string lName, DateTime bDate);
+        
+        Task<IEnumerable<AuthorDTO>> ListAuthors(int pageSize, int pageNumber);
+        
         Task<bool> AuthorExists(Guid id);
+        
         Task<AuthorDTO> ListAuthorOfBook(string title);
-
     }
 }

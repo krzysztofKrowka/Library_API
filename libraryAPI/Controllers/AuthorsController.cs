@@ -23,37 +23,44 @@ namespace Library.API.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Librarian,Assistant")]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthors(int pageSize, int pageNumber)
         {
-            if (await _service.ListAuthors() == null)
+            
+            if (await _service.ListAuthors(pageSize, pageNumber) == null)
             {
                 return NotFound();
             }
 
-            return Ok(await _service.ListAuthors());
+            return Ok(await _service.ListAuthors(pageSize, pageNumber));
 
         }
+        
+        
         [HttpGet("OfBook/{title}")]
         [Authorize(Roles = "Librarian,Assistant,Reader")]
         public async Task<ActionResult<AuthorDTO>> GetAuthorOfBook(string title)
         {
-            if (await _service.ListAuthors() == null)
+            
+            if (await _service.ListAuthorOfBook(title) == null)
             {
                 return NotFound();
             }
 
             return Ok(await _service.ListAuthorOfBook(title));
+        
         }
 
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Librarian,Assistant")]
-        public async Task<ActionResult<Author>> GetAuthor(Guid id)
+        public async Task<ActionResult<AuthorDTO>> GetAuthor(Guid id)
         {
+            
             if (await _service.ListAuthor(id) == null)
             {
                 return NotFound();
             }
+            
             var author = await _service.ListAuthor(id);
 
             if (author == null)
@@ -62,29 +69,37 @@ namespace Library.API.Controllers
             }
 
             return Ok(author);
+        
         }
 
+        
         [HttpPut("{id}")]
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> PutAuthor(Guid id, AuthorDTO author)
         {
+            
             var put =await _service.PutAuthor(id, author);
+            
             if (put)
                 return NoContent();
             else
                 return BadRequest();
+        
         }
 
 
         [HttpPost]
         [Authorize(Roles = "Librarian,Assistant")]
-        public async Task<ActionResult<Author>> PostAuthor(AuthorDTO authorDTO)
+        public async Task<ActionResult<AuthorDTO>> PostAuthor(string FirstName, string LastName, DateTime BirthDate)
         {
-            var author = await _service.CreateAuthor(authorDTO);
+    
+            var author = await _service.CreateAuthor(FirstName,LastName,BirthDate);
+ 
             if (author == null)
                 return BadRequest("Error");
             else
                 return Created(nameof(GetAuthor), author);
+       
         }
 
 
@@ -92,11 +107,14 @@ namespace Library.API.Controllers
         [Authorize(Roles = "Librarian,Assistant")]
         public async Task<IActionResult> DeleteAuthor(Guid id)
         {
+            
             var delete = await _service.DeleteAuthor(id);
+            
             if (delete)
                 return NoContent();
             else
                 return BadRequest();
+        
         }
 
     }

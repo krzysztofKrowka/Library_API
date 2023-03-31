@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Library.Repositories.Models
-{
-    public class Librarian : BaseEnitty
-    {
-        public string FirstName { get; set; }
-       
-        public string LastName { get; set; }
-    }
+{        
+    public class BaseEnitty
+    {   
+        public Guid ID { get; set; }
+        
+        public bool IsDeleted { get; set; }
+    }   
 }
