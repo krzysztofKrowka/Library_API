@@ -16,7 +16,7 @@ namespace Library.Repositories.Interfaces
         
         DbSet<Librarian> Librarians { get; set; }
         
-        List<User> Users { get; }
+        DbSet<User> Users { get; }
 
 
 

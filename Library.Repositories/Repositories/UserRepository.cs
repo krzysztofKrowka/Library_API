@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Library.Repositories.Repositories
 {
-    public class LoginRepository : ILoginRepository
+    public class UserRepository : IUserRepository
     {
         private readonly IConfiguration _configuration;
         private readonly ILibraryContext _context;
-        public LoginRepository(IConfiguration configuration, ILibraryContext context)
+        public UserRepository(IConfiguration configuration, ILibraryContext context)
         {
             _configuration = configuration;
             _context = context;
@@ -70,6 +70,13 @@ namespace Library.Repositories.Repositories
 
             return null;
         
+        }
+        public async Task<User> Register(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return user;
         }
 
     }

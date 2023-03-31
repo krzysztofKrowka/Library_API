@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Library.Repositories.Interfaces
 {
-    public interface ILoginRepository
+    public interface IUserRepository
     {
         string Login(User userLogin);
+        Task<User> Register(User user);
     }
 }

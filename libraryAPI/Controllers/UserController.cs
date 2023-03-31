@@ -11,28 +11,38 @@ namespace libraryAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class LoginController :ControllerBase
+    public class UserController :ControllerBase
     {
-        private readonly ILoginService _loginService;
+        private readonly IUserService _userService;
         
-        public LoginController(ILoginService loginService)
+        public UserController(IUserService loginService)
         {
-            _loginService = loginService;
+            _userService = loginService;
         }
         
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("/login")]
         public async Task<ActionResult> Login(UserLogin userLogin)
         {
             
-            var response = _loginService.Login(userLogin);
+            var response = _userService.Login(userLogin);
             
             if(response==null) 
                 return NotFound("user not found");
             
             return Ok(response);
         
+        }
+        [AllowAnonymous]
+        [HttpPost("/register")]
+        public async Task<ActionResult> Register(UserRegister userRegister)
+        {
+
+            var response = await _userService.Register(userRegister);
+
+            return Created("User Registered",response);
+
         }
     }
 }

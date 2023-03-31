@@ -23,13 +23,13 @@ namespace Library.Services.Test
             //arrange
             var authorList = GetAuthorsData();
             
-            authorService.Setup(x => x.ListAuthors()).Returns(authorList);
+            authorService.Setup(x => x.ListAuthors(1, 1)).Returns(authorList);
             
             var authorsController = new AuthorsController(authorService.Object);
             var authorsFromMethod = authorList.Result;
 
             //act
-            var authorResult = await authorsController.GetAuthors();
+            var authorResult = await authorsController.GetAuthors(1,1);
             var authorsFromController = (authorResult.Result as OkObjectResult).Value as IEnumerable<AuthorDTO>;
 
             

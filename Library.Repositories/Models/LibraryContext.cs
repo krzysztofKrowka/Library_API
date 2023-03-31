@@ -15,14 +15,8 @@ namespace Library.Repositories.Models
         
         public DbSet<Librarian> Librarians { get; set; }
         
-        public List<User> Users { get; } = new()
-        {
-            new User(){ Username="librarian",Password="librarian",Role="Librarian"},
-            new User(){ Username="assistant",Password="assistant",Role="Assistant"},
-            new User(){ Username="reader",Password="reader",Role="Reader"},
-        };
+        public DbSet<User> Users { get; set; }
 
-        
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

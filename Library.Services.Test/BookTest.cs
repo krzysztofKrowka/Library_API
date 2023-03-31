@@ -20,12 +20,12 @@ namespace Library.Services.Test
         {
             //arrange
             var bookList = GetBooksData();
-            bookService.Setup(x => x.ListBooks()).Returns(bookList);
+            bookService.Setup(x => x.ListBooks(1, 1)).Returns(bookList);
             var booksController = new BooksController(bookService.Object);            
             var booksFromMethod = bookList.Result;
 
             //act
-            var booksResult = await booksController.GetBooks();
+            var booksResult = await booksController.GetBooks(1,1);
             var booksFromController = (booksResult.Result as OkObjectResult).Value as IEnumerable<BookDTO>;
 
             
@@ -67,11 +67,11 @@ namespace Library.Services.Test
         {
             //arrange
             var bookList = GetBooksData();
-            bookService.Setup(x => x.ListBooks()).Returns(bookList);
+            bookService.Setup(x => x.ListBooks(1,1)).Returns(bookList);
             var booksController = new BooksController(bookService.Object);
 
             //act
-            var booksResult = await booksController.GetBooks();
+            var booksResult = await booksController.GetBooks(1,1);
             var booksFromController = (booksResult.Result as OkObjectResult).Value as IEnumerable<BookDTO>;
             var expectedTitle = booksFromController.ElementAt(0).Title;
 
